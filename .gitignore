@@ -1,0 +1,8 @@
+*~
+.*.swp
+.build
+
+git/figures/*
+i18n/figures/*
+ikaaro/figures/*
+itools/figures/*
