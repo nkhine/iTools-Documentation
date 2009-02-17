@@ -167,9 +167,20 @@ latex_paper_size = 'a4'
 
 # Grouping the document tree into LaTeX files. List of tuples
 # (source start file, target name, title, author, document class [howto/manual]).
+
+jdavid = ur'Juan David Ibáñez Palomar'
 latex_documents = [
-  ('index', 'hforge-documentation.tex', ur"HForge's Documentation",
-   ur'Juan David Ibáñez Palomar', 'manual'),
+  ('itools/index', 'itools-tutorial.tex', ur"Itools' tutorial", jdavid,
+   'manual'),
+  ('ikaaro/user', 'user-guide.tex', ur"User Guide", jdavid, 'howto'),
+  ('ikaaro/admins', 'administrator-guide.tex', ur"Administrators Guide",
+   jdavid, 'howto'),
+  ('i18n/index', 'i18n.tex', ur"Internationalization", jdavid, 'howto'),
+  ('git/index', 'git.tex', ur"Introduction to Git", jdavid, 'howto'),
+  ('packaging/index', 'packaging.tex', ur"The itools packaging system",
+   jdavid, 'howto'),
+  ('windows/index', 'windows.tex', ur"Build Itools under Windows", jdavid,
+   'howto')
 ]
 
 # The name of an image file (relative to this directory) to place at the top of
@@ -188,3 +199,4 @@ latex_documents = [
 
 # If false, no module index is generated.
 #latex_use_modindex = True
+
