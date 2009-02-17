@@ -29,7 +29,7 @@ import sys, os
 extensions = []
 
 # Add any paths that contain templates here, relative to this directory.
-templates_path = ['.templates']
+templates_path = ['templates']
 
 # The suffix of source filenames.
 source_suffix = '.rst'
@@ -130,7 +130,7 @@ html_static_path = ['.static']
 
 # Additional templates that should be rendered to pages, maps page names to
 # template names.
-#html_additional_pages = {}
+html_additional_pages = {'download': 'download.html'}
 
 # If false, no module index is generated.
 #html_use_modindex = True
