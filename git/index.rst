@@ -393,7 +393,7 @@ For details about a command type::
 
 .. rubric:: Footnotes
 
-.. [#git-coding-style] Explained in another document, see http://www.hforge.org/docs/
+.. [#git-coding-style] Explained in another document, see :ref:`style`
 
 .. [#git-gentoo] http://www.gentoo.org
 

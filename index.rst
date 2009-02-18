@@ -25,6 +25,7 @@ Howtos
    i18n/index
    git/index
    packaging/index
+   style/index
    windows/index
 
 
