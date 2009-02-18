@@ -177,6 +177,7 @@ latex_documents = [
    jdavid, 'howto'),
   ('i18n/index', 'i18n.tex', ur"Internationalization", jdavid, 'howto'),
   ('git/index', 'git.tex', ur"Introduction to Git", jdavid, 'howto'),
+  ('style/index', 'style.tex', ur"Coding Style", jdavid, 'howto'),
   ('packaging/index', 'packaging.tex', ur"The itools packaging system",
    jdavid, 'howto'),
   ('windows/index', 'windows.tex', ur"Build Itools under Windows", jdavid,

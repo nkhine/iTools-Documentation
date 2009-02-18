@@ -179,20 +179,39 @@ One line, one statement
 
 Don't put more than one statement on the same line:
 
-    +-------------------------+----------------------------------+
-    |  Good                   | Bad                              |
-    +=========================+==================================+
-    | ``if x is True:``       | ``if x is True: do_something()`` |
-    |     ``do_something()``  |                                  |
-    +-------------------------+----------------------------------+
-    | ``do_one()``            | ``do_one(); do_two()``           |
-    |                         |                                  |
-    | ``do_two()``            |                                  |
-    +-------------------------+----------------------------------+
-    | ``def f(x, y):``        | ``def f(x, y): return x * y``    |
-    |     ``return x * y``    |                                  |
-    +-------------------------+----------------------------------+
 
+**Bad**
+::
+    if x is True: do_something()
+
+**Good**
+::
+
+    if x is True:
+        do_something()
+
+**Bad**
+::
+
+    do_one(); do_two()
+
+**Good**
+::
+
+    do_one()
+    do_two()
+
+
+**Bad**
+::
+
+    def f(x, y): return x * y`
+
+**Good**
+::
+
+    def f(x, y):
+        return x * y
 
 
 Blank lines
