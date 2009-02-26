@@ -10,45 +10,43 @@ Internationalize
 ----------------
 
 
-DTML and ZPT
-^^^^^^^^^^^^
+* DTML and ZPT
 
-The LocalDTMLFile and LocalPageTemplateFile classes must be used instead of
-the DTMLfile and PageTemplateFile classes::
+    The LocalDTMLFile and LocalPageTemplateFile classes must be used instead
+    of the DTMLfile and PageTemplateFile classes::
 
-    from Products.Localizer import LocalDTMLFile, LocalPageTemplateFile
+        from Products.Localizer import LocalDTMLFile, LocalPageTemplateFile
 
-    ....
+        ....
 
-    manage_addForm = LocalDTMLFile('addForm', globals())
+        manage_addForm = LocalDTMLFile('addForm', globals())
 
-Then the messages will be translated using the gettext method:
+    Then the messages will be translated using the gettext method:
 
-.. code-block:: xml
+    .. code-block:: xml
 
-    <dtml-var "gettext('Hello world!')">
-    <span tal:replace="python:gettext('Hello world!')">
-      Hello world!
-    </span>
+        <dtml-var "gettext('Hello world!')">
+        <span tal:replace="python:gettext('Hello world!')">
+          Hello world!
+        </span>
 
 
-Python code
-^^^^^^^^^^^
+* Python code
 
-Import the needed stuff::
+    Import the needed stuff::
 
-    from Products.Localizer import Gettext
+        from Products.Localizer import Gettext
 
-    _ = Gettext.translation(globals())
-    N_ = Gettext.dummy
+        _ = Gettext.translation(globals())
+        N_ = Gettext.dummy
 
-The underscode (\_) is used to translate messages. The N\_ function is used for
-defered translations, it markups the message for translation but don't
-translates it.
-::
+    The underscode (\_) is used to translate messages. The N\_ function is
+    used for defered translations, it markups the message for translation but
+    don't translates it.
+    ::
 
-    def x(self, ...):
-        return _('Hello world!')
+        def x(self, ...):
+            return _('Hello world!')
 
 
 Localize

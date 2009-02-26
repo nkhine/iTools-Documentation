@@ -181,6 +181,8 @@ latex_documents = [
   ('packaging/index', 'packaging.tex', ur"The itools packaging system",
    jdavid, 'howto'),
   ('windows/index', 'windows.tex', ur"Build Itools under Windows", jdavid,
+   'howto'),
+  ('localizer/index', 'localizer.tex', ur"Localizer", jdavid,
    'howto')
 ]
 
