@@ -40,12 +40,13 @@ Other tools and related stuff
 
 * `CMFLocalizer <http://zope.org/Members/fafhrd/CMFLocalizer>`_, adds
   filesystem based message catalogs to the CMF. By Kim Nikolay.
-* `Base18 <http://www.nexedi.org/software/Base18.stx>`_, explores new ways to
+* `Base18
+  <http://www.nexedi.org/sections/software/base18_multilingual/view>`_,
+  explores new ways to
   manage multilingual content (for the CMF). By Jean-Paul Smets.
-* `Localizer + CMF
-  <http://cmf.zope.org/Members/rthaden/LocCMFProduct/niLocCMFProduct>`_ HowTo
-  and product. Multilingual content for the CMF with Localizer. By Rainer
-  Thaden.
+* `Localizer + CMF <http://www.zope.org/Members/rthaden/HowToLocCMFProduct>`_
+  HowTo and product. Multilingual content for the CMF with Localizer. By
+  Rainer Thaden.
 * `Translation Service
   <http://www.zope.org/Members/efge/TranslationService>`_.  Lets to use the
   i18n ZPT namespace with Localizer. By Florent Guillaume.

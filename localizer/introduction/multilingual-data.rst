@@ -71,14 +71,14 @@ engines are an important part of the solution.
 
     Institutions:
 
-        * the `Localisation Research Centre <http://lrc.csis.ul.ie/>`_
+        * the `Localisation Research Centre <http://www.localisation.ie/>`_
         * the `Localisation Standards Industry Association
           <http://www.lisa.org/>`_
 
     Publications:
 
         * `Localisation focus
-          <http://lrc.csis.ul.ie/publications/locfocus/index.htm>`_
+          <http://www.localisation.ie/resources/locfocus/index.htm>`_
 
     Standards:
 
