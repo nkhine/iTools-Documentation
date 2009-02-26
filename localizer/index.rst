@@ -1,19 +1,16 @@
 Localizer
 #########
 
+Localizer is a Zope product that allows to build multilingual web
+applictaions.
 
-This is the documentation for Localizer, a Zope tool that provides several
-facilities to address the multilingual needs for the web.
+.. note::
 
+   This documentation was written for Localizer 0.9, and has not been
+   updated since.  Though most of it should apply to newer versions of
+   Localizer, because the API has not changed much.
 
-Documentation
-=============
-
-Here you find documentation, tutorial, examples, ... for localizer. Warning!,
-this documentation is for the CVS version, it could or couldn't work with
-0.8.1 or previous versions.
-
-The sections are:
+Documentation, table of contents:
 
 .. toctree::
    :maxdepth: 2
@@ -23,19 +20,19 @@ The sections are:
    tutorial/index
    python-programmers/index
 
-and here, some other interesting links:
+Other documents of interest (external links):
 
 * `List of tips <http://www.zope.org/Members/CodeSyntax/DTML_Localizer>`_, by
   Luistxo from Code&Syntax.
-* The `slides <http://XXX>`_ and the `example <http://XXX>`_ I used for the
+* The `slides <http://>`_ and the `example <http://>`_ I used for the
   talk about Localizer at the fifth Hispalinux congress held in Madrid
   (Spain). The `article
   <http://congreso.hispalinux.es/ponencias/index.en.html>`_ is available too.
   Everything is in spanish only.
 
 
-Other tools and related stuff
-=============================
+Products based on Localizer
+===========================
 
 * `CMFLocalizer <http://zope.org/Members/fafhrd/CMFLocalizer>`_, adds
   filesystem based message catalogs to the CMF. By Kim Nikolay.
@@ -51,21 +48,66 @@ Other tools and related stuff
   i18n ZPT namespace with Localizer. By Florent Guillaume.
 
 
-Examples
-========
+Sites powered by Localizer
+==========================
 
-.. toctree::
-   :maxdepth: 1
+Here is a list of multilingual web sites that use Localizer. If you've used
+Localizer to build a web site or to develop a multilingual Python product or
+for something else, please tell me, send me a url if it's public and a short
+explanation of how you used Localizer or your experience with it, and I'll
+include it on the list.
 
-   examples
+* `LLEU <http://lleu2001.uji.es/>`_
+
+    I developed Localizer to build this web site, it included workflow for
+    multilingual documents and an automatic translation system to aid human
+    translators.
+
+* `Code&Syntax <http://www.codesyntax.com/>`_
+
+    Code&Syntax is a Zope company specialized in internationalization and
+    localization. They're the Localizer users number 1, and have provided me
+    very valuable feedback. Other multilingual web sites based on Localizer of
+    this company are:
+
+    + `Udal Euskaltegiak <http://www.udaleuskaltegiak.net/>`_
+    + `Egoibarra <http://www.egoibarra.com/>`_
+    + `Hotsak.com <http://www.hotsak.com/>`_
+
+* `Castagnari <http://www.castagnari.com/>`_
+
 
 
 Credits
 =======
 
-.. toctree::
-   :maxdepth: 1
+This list has not been updated for a while.
 
-   credits
-
+    +----------------------+----------------------------------+
+    | Lead developer       | **Juan David Ibáñez Palomar**    |
+    +----------------------+----------------------------------+
+    | Developers           | **Andrés Marzal Varó**           |
+    |                      +                                  +
+    |                      | **Bjorn Stabell**                |
+    |                      +                                  +
+    |                      | **Florent Guillaume**            |
+    |                      +                                  +
+    |                      | **Jean-Paul Smets**              |
+    +----------------------+----------------------------------+
+    | Graphic designers    | **Maite Rementeria**             |
+    +----------------------+----------------------------------+
+    | Product translators  | **Arnaud Lefèvre** (french)      |
+    |                      +                                  +
+    |                      | **Danny William Adair** (german) |
+    |                      +                                  +
+    |                      | **Gabor Suveg** (hungarian)      |
+    |                      +                                  +
+    |                      | **Kazuya Fukamachi** (japanese)  |
+    |                      +                                  +
+    |                      | **Serge Stinckwich** (french)    |
+    |                      +                                  +
+    |                      | **Garikoitz Araolaza** (basque)  |
+    |                      +                                  +
+    |                      | **Luistxo Fernandez** (basque)   |
+    +----------------------+----------------------------------+
 
