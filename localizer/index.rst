@@ -2,29 +2,26 @@ Localizer
 #########
 
 
-What is it?
-===========
-
-Localizer is a Zope product that helps to build multilingual web sites and
-multilingual Zope products.
-
-
-Download
-========
-
-The project is hosted in SourceForge, download and access the CVS from the
-`LLEU project <http://sf.net/projects/lleu>`_.
+This is the documentation for Localizer, a Zope tool that provides several
+facilities to address the multilingual needs for the web.
 
 
 Documentation
 =============
 
-Here you find documentation, tutorial, examples, ... for localizer:
+Here you find documentation, tutorial, examples, ... for localizer. Warning!,
+this documentation is for the CVS version, it could or couldn't work with
+0.8.1 or previous versions.
+
+The sections are:
 
 .. toctree::
    :maxdepth: 1
 
-   guide/index
+   quick-start
+   introduction/index
+   tutorial/index
+   python-programmers/index
    examples
 
 and here, some other interesting links:
@@ -36,13 +33,6 @@ and here, some other interesting links:
   (Spain). The `article
   <http://congreso.hispalinux.es/ponencias/index.en.html>`_ is available too.
   Everything is in spanish only.
-
-
-Community
-=========
-
-Suscribe to the Localizer `mailing list
-<http://lists.itaapy.com/listinfo/localizer>`_.
 
 
 Other tools and related stuff
