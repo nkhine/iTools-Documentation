@@ -16,13 +16,12 @@ this documentation is for the CVS version, it could or couldn't work with
 The sections are:
 
 .. toctree::
-   :maxdepth: 1
+   :maxdepth: 2
 
    quick-start
    introduction/index
    tutorial/index
    python-programmers/index
-   examples
 
 and here, some other interesting links:
 
@@ -50,6 +49,15 @@ Other tools and related stuff
 * `Translation Service
   <http://www.zope.org/Members/efge/TranslationService>`_.  Lets to use the
   i18n ZPT namespace with Localizer. By Florent Guillaume.
+
+
+Examples
+========
+
+.. toctree::
+   :maxdepth: 1
+
+   examples
 
 
 Credits
