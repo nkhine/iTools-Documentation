@@ -182,8 +182,9 @@ latex_documents = [
    jdavid, 'howto'),
   ('windows/index', 'windows.tex', ur"Build Itools under Windows", jdavid,
    'howto'),
-  ('localizer/index', 'localizer.tex', ur"Localizer", jdavid,
-   'howto')
+# NotImplementedError: Column or row spanning cells are not implemented.
+#  ('localizer/index', 'localizer.tex', ur"Localizer", jdavid,
+#   'howto')
 ]
 
 # The name of an image file (relative to this directory) to place at the top of
