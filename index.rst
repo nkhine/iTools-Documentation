@@ -14,6 +14,7 @@ Projects
 
    itools/index
    ikaaro/index
+   localizer/index
 
 
 Howtos

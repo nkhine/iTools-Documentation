@@ -182,6 +182,7 @@ Don't put more than one statement on the same line:
 
 **Bad**
 ::
+
     if x is True: do_something()
 
 **Good**
