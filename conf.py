@@ -172,7 +172,7 @@ jdavid = ur'Juan David Ibáñez Palomar'
 latex_documents = [
   ('itools/index', 'itools-tutorial.tex', ur"Itools' tutorial", jdavid,
    'manual'),
-  ('ikaaro/user', 'user-guide.tex', ur"User Guide", jdavid, 'howto'),
+  ('ikaaro/users', 'user-guide.tex', ur"User Guide", jdavid, 'howto'),
   ('ikaaro/admins', 'administrator-guide.tex', ur"Administrators Guide",
    jdavid, 'howto'),
   ('i18n/index', 'i18n.tex', ur"Internationalization", jdavid, 'howto'),

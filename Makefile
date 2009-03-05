@@ -1,3 +1,6 @@
+# Git repository
+GIT_VERSION = $(shell bin/release.py)
+
 # You can set these variables from the command line.
 SPHINXOPTS    =
 SPHINXBUILD   = sphinx-build
@@ -20,6 +23,7 @@ help:
 
 clean:
 	-rm -rf .build/*
+	-rm -f hforge-docs-*.tgz
 	cd itools && make clean
 	cd ikaaro && make clean
 	cd git && make clean
@@ -89,3 +93,15 @@ linkcheck:
 	@echo
 	@echo "Link check complete; look for any errors in the above output " \
 	      "or in .build/linkcheck/output.txt."
+
+release: html pdf
+	cd .build/html && tar czf ../../hforge-docs-html-$(GIT_VERSION).tgz *
+	cd .build/latex && tar czf ../../hforge-docs-pdf-$(GIT_VERSION).tgz \
+										 itools-tutorial.pdf user-guide.pdf \
+										 administrator-guide.pdf i18n.pdf git.pdf \
+										 style.pdf packaging.pdf windows.pdf
+	@echo
+	@echo "html doc is available ./hforge-docs-html-$(GIT_VERSION).tgz and"
+	@echo "pdf doc is available ./hforge-docs-pdf-$(GIT_VERSION).tgz"
+
+
