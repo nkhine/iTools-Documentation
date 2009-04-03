@@ -50,7 +50,7 @@ parts:
 * The *headers*. Each line after the *request line*, and before the first
   blank line, is a *header*; where a *header* has a name and a value. Headers
   are used to information about the client (``User-Agent``, ``Agent``), about
-  the connection (``Keep-Alive``, {``Connection``), etc.
+  the connection (``Keep-Alive``, ``Connection``), etc.
 * The *body*. At the end, separated from the *header* by a blank line, comes
   the body. It contains extra information, for example the values of a form,
   or a file that is uploaded. Most requests do not include a body.
