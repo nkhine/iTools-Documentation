@@ -486,9 +486,9 @@ In this section we are going to see the database system for file handlers,
 which adds some nice features: *caching* and *transactions*.
 ::
 
-    >>> from itools.handlers import Database
+    >>> from itools.handlers import RWDatabase
     >>>
-    >>> db = Database()
+    >>> db = RWDatabase(5000)
     >>> file = db.get_handler('itools.pdf')
     >>> print file.database
     <itools.handlers.database.Database object at 0x2b138fde6910>
@@ -535,7 +535,7 @@ This is the programming interface provided by the database:
 .. class:: Handler
 
 
-  .. method:: get_handler(reference, cls=None, cache=True)
+  .. method:: get_handler(self, reference, cls=None)
 
         Returns the handler for the given URI reference.  If there is not any
         handler at the given URI reference, raises the :exc:`LookupError`
@@ -543,11 +543,6 @@ This is the programming interface provided by the database:
 
         By default it will figure out the best handler class to use.  The
         parameter *cls* allows to explicitly choose the handler class to use.
-
-        By default the file handler will be stored in the database cache to
-        speed up future access to the same URI.  If the *cache* parameter is
-        passed with the value :obj:`False`, then the file handler won't be
-        cached.
 
   .. method:: has_handler(reference)
 
@@ -724,7 +719,7 @@ will be left in an inconsistent state.
 
 To address this issue, for applications that require the transactions to be
 atomic whatever happens, the :mod:`itools.handlers` package includes the
-:class:`SafeDatabase` class.
+:class:`GitDatabase` class.
 
 TODO
 
@@ -990,7 +985,7 @@ tell our handler class is able to manage that mimetype with the variable class
 :attr:`class_mimetypes`, and we will register our handler class to its
 parent::
 
-    from mimetypes import add_type
+    from itools.core import add_type
     from itools.handlers import register_handler_class
 
     add_type('text/x-task-tracker', '.tt')
