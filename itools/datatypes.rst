@@ -132,22 +132,6 @@ types:
     defined in the :mod:`itools.uri` package, usually it will be an instance
     of the class :class:`itools.uri.generic.Reference`.
 
-.. class:: FileName
-
-    Usually filenames include extensions to indicate the file type, and
-    sometimes other information like the language. The filename decoder will
-    parse a filename and return a tuple where the first element is the
-    filename, the second element is the file type, and the last element is the
-    language. For example::
-
-        >>> from itools.datatypes import FileName
-        >>> FileName.decode('index.html.en')
-        ('index', 'html', 'en')
-        >>> FileName.decode('index.html')
-        ('index', 'html', None)
-        >>> FileName.decode('index')
-        ('index', None, None)
-
 .. class:: QName
 
     An XML qualified name has two parts, the prefix and the local name, so
@@ -166,6 +150,21 @@ types:
         >>> QName.encode((None, 'href'))
         'href'
 
+.. class:: itools.vfs.FileName
+
+    Usually filenames include extensions to indicate the file type, and
+    sometimes other information like the language. The filename decoder will
+    parse a filename and return a tuple where the first element is the
+    filename, the second element is the file type, and the last element is the
+    language. For example::
+
+        >>> from itools.vfs import FileName
+        >>> FileName.decode('index.html.en')
+        ('index', 'html', 'en')
+        >>> FileName.decode('index.html')
+        ('index', 'html', None)
+        >>> FileName.decode('index')
+        ('index', None, None)
 
 Defining new datatypes
 ======================
