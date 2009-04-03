@@ -165,14 +165,13 @@ search interface::
 
         schema = {
             'client_id': Integer,
-            'name': Unicode(index='text'),
+            'name': Unicode(is_indexed=True),
             'email': String,
-            'registration_date': Date(index='keyword')}
+            'registration_date': Date(is_indexed=True)}
 
 In this example we will search the CSV file by the columns *name* and
-*registration date*, so we add the parameter *index* with the right analyser
-(*text* for :class:`Unicode` values, *keyword* for anything else) to the these
-columns.
+*registration date*, so we specify that these columns must be indexed with
+``is_indexed=True``.
 
 Now we can use the search interface::
 
