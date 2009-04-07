@@ -9,7 +9,7 @@ digraph G {
 #  "itools.csv" -> "itools.vfs";
   "itools.csv" -> "itools.xapian";
 
-  "itools.datatypes" -> "itools.core";
+#  "itools.datatypes" -> "itools.core";
   "itools.datatypes" -> "itools.uri";
 
 #  "itools.gettext" -> "itools.core";
@@ -54,7 +54,6 @@ digraph G {
 #  "itools.odf" -> "itools.xmlfile";
 
   "itools.office" -> "itools.handlers";
-#  "itools.office" -> "itools.vfs";
 
 #  "itools.pdf" -> "itools.core";
 #  "itools.pdf" -> "itools.datatypes";
@@ -80,6 +79,7 @@ digraph G {
 #  "itools.relaxng" -> "itools.datatypes";
   "itools.relaxng" -> "itools.handlers";
   "itools.relaxng" -> "itools.xml";
+#  "itools.relaxng" -> "itools.uri";
 #  "itools.relaxng" -> "itools.vfs";
 
 #  "itools.rest" -> "itools.handlers";
@@ -108,15 +108,16 @@ digraph G {
   "itools.tmx" -> "itools.xml";
 
   "itools.uri" -> "itools.abnf";
+  "itools.uri" -> "itools.core";
 
 #  "itools.vfs" -> "itools.core";
   "itools.vfs" -> "itools.datatypes";
   "itools.vfs" -> "itools.i18n";
-#  "itools.vfs" -> "itools.uri";
 
 #  "itools.web" -> "itools.core";
 #  "itools.web" -> "itools.datatypes";
 #  "itools.web" -> "itools.gettext";
+#  "itools.web" -> "itools.handlers";
   "itools.web" -> "itools.http";
 #  "itools.web" -> "itools.i18n";
   "itools.web" -> "itools.stl";
@@ -124,9 +125,10 @@ digraph G {
 
   "itools.workflow";
 
-  "itools.xapian" -> "itools.datatypes";
-  "itools.xapian" -> "itools.i18n";
+#  "itools.xapian" -> "itools.datatypes";
+#  "itools.xapian" -> "itools.i18n";
 #  "itools.xapian" -> "itools.uri";
+  "itools.xapian" -> "itools.vfs";
 
 #  "itools.xliff" -> "itools.core";
 #  "itools.xliff" -> "itools.datatypes";
