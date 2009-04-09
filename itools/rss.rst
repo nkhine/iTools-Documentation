@@ -62,7 +62,7 @@ Now there are three main entries in the RSSFile API:
         is a list of dictionaries, one per item.
 
 All :attr:`channel`, :attr:`image` and individual :attr:`item` dictionaries
-are mapping the RSS~2.0 elements to keys, are their contents to values.
+are mapping the RSS 2.0 elements to keys, are their contents to values.
 
 
 The Channel
@@ -72,16 +72,16 @@ An example is worth a thousand words::
 
     >>> from pprint import pprint
     >>> pprint(sample.channel)
-   {'description': u'Liftoff to Space Exploration.',
-    'docs': 'http://blogs.law.harvard.edu/tech/rss',
-    'generator': u'Weblog Editor 2.0',
-    'language': 'en-us',
-    'lastBuildDate': datetime.datetime(2003, 6, 10, 11, 41, 1),
-    'link': <itools.uri.generic.Reference object at 0x82ef9dc>,
-    'managingEditor': 'editor@example.com',
-    'pubDate': datetime.datetime(2003, 6, 10, 6, 0),
-    'title': u'Liftoff News',
-    'webMaster': 'webmaster@example.com'}
+    {'description': u'Liftoff to Space Exploration.',
+     'docs': 'http://blogs.law.harvard.edu/tech/rss',
+     'generator': u'Weblog Editor 2.0',
+     'language': 'en-us',
+     'lastBuildDate': datetime.datetime(2003, 6, 10, 11, 41, 1),
+     'link': 'http://liftoff.msfc.nasa.gov/',
+     'managingEditor': 'editor@example.com',
+     'pubDate': datetime.datetime(2003, 6, 10, 6, 0),
+     'title': u'Liftoff News',
+     'webMaster': 'webmaster@example.com'}
 
 Now you can see that the most important elements were decoded to Python
 objects. Specifically, texts are decoded into unicode. The *link* element is
@@ -104,15 +104,16 @@ Knowing the number of items in the feed is straightforward::
 An Item
 ^^^^^^^
 
-As for the channel, RSS~2.0 item elements are mapped into a dictionary::
+As for the channel, RSS 2.0 item elements are mapped into a dictionary::
 
     >>> pprint(sample.items[0])
-    {'description': u'How do Americans get ready to work with Russians aboard the
-    International Space Station? They take a crash course in culture, language and
-    protocol at Russia\'s <a href="http://howe.iki.rssi.ru/GCTC/gctc_e.htm">Star
-    City</a>.',
+    {'description': u'How do Americans get ready to work with Russians aboard
+                      the International Space Station? They take a crash
+                      course in culture, language and protocol at Russia\'s <a
+                      href="http://howe.iki.rssi.ru/GCTC/gctc_e.htm">Star
+                      City</a>.',
      'guid': 'http://liftoff.msfc.nasa.gov/2003/06/03.html#item573',
-     'link': <itools.uri.generic.Reference object at 0x82f802c>,
+     'link': 'http://liftoff.msfc.nasa.gov/news/2003/news-starcity.asp',
      'pubDate': datetime.datetime(2003, 6, 3, 11, 39, 21),
      'title': u'Star City'}
 
@@ -191,27 +192,27 @@ the agregator.
 
 An example to clarify it::
 
-    from itools.web import Node
+    from itools.web import BaseView
 
-    class News(Node):
+    class News(BaseView):
 
-        def feed__mtime__(self):
+        def get_mtime(self, resource):
             # Return for example the modification date
             # of the last published article.
+            ...
 
 
-        def feed(self, context):
+        def GET(self, resource, context):
             # The server already replied to agregators having the latest
             # version. So there is something to send.
             feed = RSSFile()
+            ...
 
-            # Fill in the feed with articles modified after the date given in
-            # the request header
-            request = context.request
-
-            # Set the content type, important!
+            # Filename and Content-Type, important!
             response = context.response
-            response.set_header('content-type', "application/rss+xml")
+            response.set_header('Content-Disposition',
+                                'inline; filename="articles.rss"')
+            response.set_header('Content-Type', 'application/rss+xml')
 
             # Send the feed, the server will set "Last-Modified"
             return feed.to_str()
