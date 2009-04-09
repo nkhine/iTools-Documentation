@@ -26,7 +26,7 @@ figures/%.eps: figures-src/%.jpg
 	convert -units PixelsPerInch -density 72 $< eps2:$@
 
 figures/%.eps: figures-src/%.svg
-	rsvg-convert $< --format=ps -o $@
+	inkscape -z $< -E $@
 
 figures/%.eps: figures-src/%.fig
 	fig2dev -L eps $< $@
@@ -46,7 +46,7 @@ figures/%.png: figures-src/%.jpg
 	convert  $< $@
 
 figures/%.png: figures-src/%.svg
-	rsvg-convert $< --format=png -o $@
+	inkscape -z $< -e $@
 
 figures/%.png: figures-src/%.dot
 	dot -Tpng $< -o $@
