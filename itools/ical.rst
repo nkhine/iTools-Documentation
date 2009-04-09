@@ -56,12 +56,12 @@ Create an icalendar object
 First, we create an icalendar object with the needed properties (Version and
 Prodid) but without any component::
 
-    >>> from itools.ical.icalendar import icalendar
-    >>> cal = icalendar()
+    >>> from itools.ical import iCalendar
+    >>> cal = iCalendar()
     >>> from pprint import pprint
     >>> pprint(cal.get_property_values())
-    {'PRODID': <itools.ical.icalendar.PropertyValue object at 0xa76cce8c>,
-     'VERSION': <itools.ical.icalendar.PropertyValue object at 0xa76cceec>}
+    {'PRODID': <itools.csv.table.Property object at 0xa76cce8c>,
+     'VERSION': <itools.csv.table.Property object at 0xa76cceec>}
 
 You can see that the two needed properties have been automatically added.
 
@@ -71,8 +71,8 @@ Add a property to an icalendar object
 
 We can add an other property to this icalendar object::
 
-    >>> from itools.ical.icalendar import PropertyValue
-    >>> cal.properties['METHOD'] = PropertyValue('PUBLISH')
+    >>> from itools.csv import Property
+    >>> cal.properties['METHOD'] = Property('PUBLISH')
 
 
 Add a component to an icalendar object
@@ -83,10 +83,10 @@ icalendar object::
 
     >>> from datetime import datetime
     >>> properties = {}
-    >>> properties['SUMMARY'] = PropertyValue('Europython 2006')
-    >>> properties['DTSTART'] = PropertyValue(datetime(2006, 07, 03))
-    >>> properties['DTEND'] = PropertyValue(datetime(2006, 07, 05))
-    >>> uid = cal.add_component('VEVENT', \*\*properties)
+    >>> properties['SUMMARY'] = Property('Europython 2006')
+    >>> properties['DTSTART'] = Property(datetime(2006, 07, 03))
+    >>> properties['DTEND'] = Property(datetime(2006, 07, 05))
+    >>> uid = cal.add_component('VEVENT', **properties)
 
 Now we add some new properties to this event, accessing it by its uid.
 
@@ -95,8 +95,8 @@ Add properties to a component
 -----------------------------
 ::
 
-    >>> properties = {'LOCATION': PropertyValue('Cern (Switzerland)')}
-    >>> cal.update_component(uid, \*\*properties)
+    >>> properties = {'LOCATION': Property('Cern (Switzerland)')}
+    >>> cal.update_component(uid, **properties)
 
 We can also add a more precised property which contains a parameter.
 
@@ -106,17 +106,17 @@ Add a property with parameter
 ::
 
     >>> parameters = {'MEMBER': ['MAILTO:DEV-GROUP@host.com']}
-    >>> value = PropertyValue('mailto:darwin@itaapy.com', \*\*parameters)
+    >>> value = Property('mailto:darwin@itaapy.com', **parameters)
     >>> cal.update_component(uid, ATTENDEE=value)
     >>>
     >>> event = cal.get_component_by_uid(uid)
     >>> pprint(event.get_property())
-    {'ATTENDEE': [<itools.ical.icalendar.PropertyValue object at 0xa7727e2c>],
-     'DTEND': <itools.ical.icalendar.PropertyValue object at 0xa7ad394c>,
-     'DTSTAMP': <itools.ical.icalendar.PropertyValue object at 0xb779a86c>,
-     'DTSTART': <itools.ical.icalendar.PropertyValue object at 0xa7727b2c>,
-     'LOCATION': <itools.ical.icalendar.PropertyValue object at 0xa7727dac>,
-     'SUMMARY': <itools.ical.icalendar.PropertyValue object at 0xa7727d8c>}
+    {'ATTENDEE': [<itools.csv.table.Property object at 0xa7727e2c>],
+     'DTEND': <itools.csv.table.Property object at 0xa7ad394c>,
+     'DTSTAMP': <itools.csv.table.Property object at 0xb779a86c>,
+     'DTSTART': <itools.csv.table.Property object at 0xa7727b2c>,
+     'LOCATION': <itools.csv.table.Property object at 0xa7727dac>,
+     'SUMMARY': <itools.csv.table.Property object at 0xa7727d8c>}
 
 You can see that all properties have a PropertyValue except the ``ATTENDEE``
 property which has a PropertyValue list, because this property can occur more
@@ -134,7 +134,7 @@ You can get the value(s) of a property by its name::
     >>>
     >>> attendees = event.get_property_values('ATTENDEE')
     >>> print attendees
-    [<itools.ical.icalendar.PropertyValue object at 0xa7727e2c>]
+    [<itools.csv.table.Property object at 0xa7727e2c>]
     >>> print attendees[0].value
     mailto:darwin@itaapy.com
     >>> print attendees[0].parameters
