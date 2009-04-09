@@ -23,7 +23,7 @@ Here there is a snippet:
 
     <h2>Task Tracker</h2>
     <div stl:repeat="task tasks"
-         xmlns:stl="http://xml.itools.org/namespaces/stl">
+         xmlns:stl="http://www.hforge.org/xml-namespaces/stl">
       <h4>${task/title} (<em>${task/state}</em>)</h4>
       <p>${task/description}</p>
     </div>
@@ -197,7 +197,7 @@ namespace must be declared:
 .. code-block:: html
 
     <?xml version="1.0" encoding="UTF-8"?>
-    <html xmlns:stl="http://xml.itools.org/namespaces/stl">
+    <html xmlns:stl="http://www.hforge.org/xml-namespaces/stl">
       ...
 
 
@@ -299,7 +299,7 @@ The Template
     <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
       "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
     <html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:stl="http://xml.itools.org/namespaces/stl">
+      xmlns:stl="http://www.hforge.org/xml-namespaces/stl">
       <head></head>
       <body>
         <h2>Task Tracker</h2>
