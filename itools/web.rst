@@ -23,6 +23,7 @@ Let's see a basic usage of the framework::
 
     # Import from itools
     from itools.web import Server, RootResource, BaseView
+    from itools.handlers import RWDatabase
 
 
     class MyView(BaseView):
@@ -37,6 +38,7 @@ Let's see a basic usage of the framework::
     if __name__ == '__main__':
         root = MyRoot()
         server = Server(root)
+        server.database = RWDatabase(5000)
         server.start()
 
 To test the code above, type:
@@ -135,20 +137,18 @@ The path (``2007/05`` in our example) identifies a resource in the tree.
 The method
 ----------
 
-Once we have the resource, the method (:meth:`view_calendar` in our example)
-will identify a method of that resource.
+Once we have the resource, the view (:meth:`view_calendar` in our example)
+will identify a view of that resource.
 
-If the method is not explicitly specified, like in the URI:
+If the view is not explicitly specified, like in the URI:
 
     http://localhost:8080/2006/05
 
-Then the method of the request (:meth:`GET`, :meth:`HEAD`, :meth:`POST`,
-etc.), will be used to determine which method of the resource will be called.
-So for instance if the request method is :meth:`GET`, then the resource method
-:meth:`GET` will be called.
+Then a default view is called.
 
-Once we have the method, it will be called. And the value it returns will
-be used to build the response that the server will send to the client.
+Once we have the view (a class), the good method (GET, POST, ...) will be
+called. And the value it returns will be used to build the response that the
+server will send to the client.
 
 
 Traversal
@@ -157,9 +157,9 @@ Traversal
 In a word, by traversal we basically understand the process of:
 
 * Picking the resource in the tree identified by the given path.
-* Picking a method of this resource, either explicitly if specified in the
+* Picking a view of this resource, either explicitly if specified in the
   URI, or implicitly.
-* Calling the method.
+* Calling the good method.
 
 
 Example: Calendar
@@ -172,6 +172,7 @@ To illustrate what has been explained so far, see this code::
     import datetime
 
     # Import from itools
+    from itools.handlers import RWDatabase
     from itools.uri import get_reference
     from itools.web import Server, RootResource, Resource, BaseView
 
@@ -224,6 +225,7 @@ To illustrate what has been explained so far, see this code::
     if __name__ == '__main__':
         root = MyRoot()
         server = Server(root)
+        server.database = RWDatabase(5000)
         server.start()
 
 To try this example type:
@@ -277,7 +279,7 @@ have two attributes:
 The namespace
 ^^^^^^^^^^^^^
 
-Another important thing the example shows is the method :meth:`_get_object`.
+Another important thing the example shows is the method :meth:`_get_resource`.
 Our hierarchy of years and months is dynamically created, so we build objects
 to support traversal and drop them after the response is returned.
 
@@ -355,13 +357,9 @@ The context
         The path to traverse from the application's root to reach the object
         to be published. It is a Path object.
 
-  .. attribute:: view
-
-        The view used for an object.
-
   .. attribute:: view_name
 
-        The name of the method to be called on the object.
+        The view used for a resource.
 
   .. attribute:: resource
 
@@ -455,17 +453,7 @@ Redirect
 
 The context object offers this API for redirections:
 
-.. method:: Context.redirect(reference, status=302)
-
-    .. warning::
-
-        Obsolete: return a Reference instance instead.
-
-    Redirects the client to the given reference. By default the response code
-    will be "*302 Found*", but this can be overridden with the parameter
-    *status*.
-
-.. method:: Context.come_back(message, goto=None, keep=[], \*\*kw)
+.. method:: Context.come_back(self, message, goto=None, keep=freeze([]), **kw)
 
     This is a high level function that builds and returns a Reference instance
     that can be sent back for a redirection. It is often useful to use in the
@@ -538,31 +526,34 @@ Public API
     Returns the view to call based on its name. In the calendar application
     above, the name was ``view_calendar``.
 
-.. method:: Resource.GET(resource, context)
-
-.. method:: Resource.HEAD(resource, context)
-
-.. method:: Resource.POST(resource, context)
-
-.. method:: Resource.PUT(resource, context)
-
-.. method:: Resource.LOCK(resource, context)
-
-.. method:: Resource.UNLOCK(resource, context)
-
-    Those methods are mapped to the HTTP methods if no method name (like
-    ``view_calendar``) is given. Note that :func:`LOCK` and :func:`UNLOCK` are
-    part of the :func:`WebDAV` protocol.
-
-    They must return a byte string for the response body, or a Reference for
-    redirection, or None for not returning a body. Raising an exception will
-    make the Web server returning an error page instead.
-
 .. method:: Resource.get_access_control()
 
     Returns the object responsible for the security of the application.  The
     default implementation looks up for the closest instance of the
     :class:`AccessControl` class in the parent path.
+
+
+The Views: BaseView
+-------------------
+
+.. method:: BaseView.GET(resource, context)
+
+.. method:: BaseView.HEAD(resource, context)
+
+.. method:: BaseView.POST(resource, context)
+
+.. method:: BaseView.PUT(resource, context)
+
+.. method:: BaseView.LOCK(resource, context)
+
+.. method:: BaseView.UNLOCK(resource, context)
+
+    Those methods are mapped to the HTTP methods. Note that :func:`LOCK` and
+    :func:`UNLOCK` are part of the :func:`WebDAV` protocol.
+
+    They must return a byte string for the response body, or a Reference for
+    redirection, or None for not returning a body. Raising an exception will
+    make the Web server returning an error page instead.
 
 
 
