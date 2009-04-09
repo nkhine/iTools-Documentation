@@ -14,7 +14,8 @@ A *virtual file system* provides a file oriented interface for resources
 accessed through different protocols, may they be stored in the local file
 system, in a remote web or ftp server, or somewhere else.
 
-The package :mod:`itools.vfs` provides such an interface.
+The package :mod:`itools.vfs` provides such an interface. It is based on the
+couple gio/gvfs from the gnome project.
 
 
 Usage
@@ -45,9 +46,7 @@ Files
 -----
 
 The function :func:`itools.vfs.open`, seen in the example above, returns an
-object that offers the same programming interface of Python files. Actually,
-for resources in the file system the object returned by
-:func:`itools.vfs.open` *is* a Python file.
+object that offers the same programming interface of Python files.
 
 We are not going to explain what this programming interface is, just check
 the Python's documentation.
@@ -114,6 +113,8 @@ Informational
 
 .. function:: get_size(reference)
 
+.. function:: get_uri(reference)
+
 
 Make and Open
 ^^^^^^^^^^^^^
@@ -123,6 +124,8 @@ Make and Open
 .. function:: make_folder(reference)
 
 .. function:: open(reference, mode=None)
+
+.. function:: mount_archive(reference)
 
 
 Remove, Copy and Move
