@@ -57,7 +57,7 @@ An example of a pretty particular scheme is *mailto*::
     >>> print r2
     mailto:jdavi@itaapy.com
     >>> r2
-    <itools.uri.Mailto object at 0x403f45ec>
+    <itools.uri.mailto.Mailto object at 0x867d53c>
     >>> print r2.scheme
     mailto
     >>> print r2.username
