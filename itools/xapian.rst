@@ -40,15 +40,21 @@ Create a new catalog
 
 .. function:: make_catalog(uri, fields)
 
-    To create a new (and empty) catalog we use this function::
+    To create a new (and empty) catalog we use this function. The fields
+    must be a ``dict`` of datatypes objects (cf. :mod:`itools.datatypes`)::
 
+        >>> from itools.datatypes import URI, Unicode
         >>> from itools.xapian import make_catalog
         >>>
-        >>> catalog = make_catalog('catalog_test')
+        >>> fields = {'url': URI(is_key_field=True, is_stored=True,
+        ...                      is_indexed=True),
+        ...           'body': Unicode(is_indexed=True)}
+        >>> catalog = make_catalog('catalog_test', fields)
 
-    The parameter is the path where the catalog will be created.  The value
-    returned by :func:`make_catalog` is a catalog object, which offers an API
-    for indexing, unindexing and searching.
+    The first parameter is the path where the catalog will be created. It can
+    be :obj:`None` to create a catalog in memory. The value returned by
+    :func:`make_catalog` is a catalog object, which offers an API for
+    indexing, unindexing and searching.
 
 
 Define the objects to be indexed
@@ -57,37 +63,30 @@ Define the objects to be indexed
 .. class:: CatalogAware
 
     Objects to be indexed must inherit from the base class
-    :class:`CatalogAware`, and implement the two methods
-    :meth:`get\_catalog\_fields` and :meth:`get\_catalog\_values`:
+    :class:`CatalogAware`, and implement the method
+    :meth:`get\_catalog\_values`:
 
         >>> from itools.xapian import CatalogAware
-        >>> from itools.xapian import KeywordField, TextField
         >>> from itools.html import HTMLFile
         >>>
         >>> class Document(CatalogAware, HTMLFile):
-        ...     def get_catalog_fields(self):
-        ...         return [KeywordField('url', is_stored=True),
-        ...                 TextField('body')]
         ...     def get_catalog_values(self):
-        ...         return {'url': str(self.uri), 'body': self.to_text()}
-        ...
-
+        ...         return {'url': self.uri, 'body': self.to_text()}
 
 Index
 -----
 
 Now we are going to index a couple of web pages::
 
-    >>>
-    # Load support for the HTTP protocol
+    >>> # Load support for the HTTP protocol
     >>> import itools.http
     >>>
-    # Index a couple of web pages
+    >>> # Index a couple of web pages
     >>> for url in ['http://www.python.org', 'http://git.or.cz/']:
     ...     document = Document(url)
     ...     catalog.index_document(document)
-    ...
-    # Save changes
+    >>>
+    >>> # Save changes
     >>> catalog.save_changes()
 
 Note that all changes are made in memory, and not saved to the file system
@@ -102,9 +101,7 @@ Time to search::
     >>> results = catalog.search(body='python')
     >>> for document in results.get_documents():
     ...     print document.url
-    ...
     http://www.python.org
-    >>>
 
 
 Building and Loading: the Constructors
@@ -122,45 +119,44 @@ created some time before. This is done using directly the class
 ::
 
     >>> from itools.xapian import Catalog
-    >>>
-    >>> catalog = Catalog('catalog_test')
+    >>> fields = {'url': URI(is_key_field=True, is_stored=True,
+    ...                      is_indexed=True),
+    ...           'body': Unicode(is_indexed=True)}
+    >>> catalog = Catalog('catalog_test', fields)
 
-This call expects the file system path where the catalog was created.
+This call expects the file system path where the catalog was created and the
+fields :obj:`dict` used to construct the database. This :obj:`dict` can be
+larger to index new documents with some other fields, but not smaller.
 
 Just to summarize these are the ways to build and to load, respectively,
 a catalog object:
 
-* :func:`make_catalog(path)`
+* :func:`make_catalog(path, fields)`
 
-    Creates a new and empty catalog at the given path.  Returns a catalog
+    Creates a new and empty catalog at the given path. Returns a catalog
     object (instance of the :class:`Catalog` class).
-* :class:`Catalog(path)`
+* :class:`Catalog(path, fields)`
 
     Loads the catalog at the given path.
 
-The fields to be indexed are defined by the indexed objects.  This we will see
+The fields to be indexed are given by the indexed documents. This we will see
 in the next section.
 
 
 Catalog Aware objects
 =====================
 
-Objects to be indexed must inherit from the base class :class:`CatalogAware`,
-and implement the two methods :func:`get_catalog_fields` and
-:func:`get_catalog_values`:
+Objects (or documents) to be indexed must inherit from the base class
+:class:`CatalogAware`, and implement the method :func:`get_catalog_values`:
 
-.. class: CatalogAware
-
-    .. method:: get_catalog_fields()
-
-        Returns a list with the definition of the fields to be indexed.  Each
-        item of the list is a field, section :ref:`xapian-fields` explains the
-        details.
+.. class:: CatalogAware
 
     .. method:: get_catalog_values()
 
         Returns a dictionary with the field values for this instance. The
         dictionary maps field names to field values.
+
+The fields are defined during the creation or the opening of the database.
 
 
 .. _xapian-fields:
@@ -168,43 +164,54 @@ and implement the two methods :func:`get_catalog_fields` and
 Fields
 ======
 
-The method :meth:`get_catalog_fields` defines the fields to index.
+The ``fields`` :obj:`dict` passed to the :func:`make_catalog` or to the
+:meth:`Catalog.__init__` functions must indicated the type and the options for
+each field.
 
-One thing we must choose when defining a field is its type. There are four
-built-in types to choose from (it is also possible to define custom field
-types, as we will see later):
+With this example::
 
-* *TextField* This field type allows for full-text indexing. What means that
-  the given text will be split into words, so it will be possible to search
-  for individual words, or for phrases.
-* *KeywordField* This type of field will index the value as it is, without any
-  particular processing. This is useful for example to search fields whose
-  values belong to a defined set of possible values (like an enumerate).
-* *BoolField* This type of field is for boolean values (True or False).
-* *IntegerField* This one is for integers.
+    fields = {'url': URI(is_key_field=True, is_stored=True,
+                         is_indexed=True),
+              'body': Unicode(is_indexed=True)}
 
-Let's see again the fields definition of our example::
+We have two fields: ``url`` and ``body``. The type of ``url`` is
+:class:`~itools.datatypes.URI`, and the type of ``body`` is
+:class:`~itools.datatypes.Unicode`. These types come from the module
+:mod:`itools.datatypes`. The values returned by the :meth:`get_catalog_values`
+must be coherent with the type, by example, we must send an :obj:`unicode`
+object for the ``body`` part of your :obj:`dict`.
 
-    def get_catalog_fields(self):
-        return [KeywordField('url', is_stored=True),
-                TextField('body')]
+Now we can see that there are some options passed to the type. They are all
+:obj:`False` by default.
+
+* ``is_stored=True``, the field is not indexed, a search with a good value
+  will not find the document, but the value is stored and can be retrieved for
+  each document.
+* ``is_indexed=True``, the value of the field is indexed. By example, for an
+  :obj:`Unicode` object, the text is split into words and indexed. So we can
+  search a document contains a given word, ... But the original text is lost.
+* ``is_key_field=True``, only one field must set this option. This field
+  becomes the key field for each document. The key field must also be indexed
+  and stored. The value of the key field must be unique for each document. The
+  key field is used to identify a document, it can be used, for example, to
+  unindex a document.
 
 Other than the field type, we must define the name of the field, in this
 example ``url`` and ``body``. As it's easy to guess we will use the field name
 to make reference to it, when indexing and searching.
 
-And finally, a field may be indexed and/or stored [#xapian-rq]_.
-
 
 Indexed and Stored fields
 -------------------------
 
-If we choose to define a field as indexed (the default), we will be able to
-search for it later.
+As we have seen, a field may be indexed and/or stored [#xapian-rq]_.
+
+If we choose to define a field as indexed, we will be able to search for it
+later.
 
 If we choose to define a field as stored, we will be able to retrieve its
 value from the catalog, without the need to load the original document; think
-of it as a cache. By default a field is not stored.
+of it as a cache. By default a field is not stored (``is_stored=False``).
 
 For example, when indexing office documents, we will want to be able to search
 their content, but we should not store it, because that would take too much
@@ -221,12 +228,12 @@ considerations.
 The external id (and how to un-index a document)
 ------------------------------------------------
 
-The first field in the definition (*url* in our example) is a special field:
+The key field in the definition (*url* in our example) is a special field:
 it defines the *external id*. That is, the value that uniquely identifies the
 original document, and that can be used to load it.
 
-This first field must be both *indexed* and *stored*, and should probably be
-of the type *KeywordField*.
+This field must be both *indexed* and *stored*, and should probably be of the
+type :class:`itools.datatypes.String` or :class:`itools.datatypes.Integer`.
 
 Internally the catalog only uses the external identifier when unindexing
 documents. The method :meth:`unindex_document` expects as parameter an
@@ -243,79 +250,6 @@ external id value, for example::
     >>>
 
 
-Howto define custom field types
--------------------------------
-
-To define your own field type, you must create a new class that inherits from
-:class:`BaseField`. :class:`BaseField` provides three static member functions:
-
-.. class:: BaseField
-
-    .. method:: split(value)
-
-        to cup up the data into words. This function must return the words
-        into the form ``(word, position)``.
-
-    .. method:: encode(value)
-
-        to translate the data into a storage form (a string).
-
-    .. method:: decode(string)
-
-        to retrieve the data from the encoded form.
-
-For example::
-
-    >>> from itools.xapian import make_catalog, CatalogAware
-    >>> from itools.xapian import BaseField, KeywordField
-    >>> from itools.xapian import register_field
-    >>>
-    >>> class FloatField(BaseField):
-    ...     type = 'float'
-    ...
-    ...     @staticmethod
-    ...     def split(value):
-    ...         yield unicode(value), 0
-    ...
-    ...     @staticmethod
-    ...     def decode(string):
-    ...         return float(string)
-    ...
-    ...     @staticmethod
-    ...     def encode(value):
-    ...         return unicode(value)
-    >>>
-    >>> register_field(FloatField)
-    >>>
-    >>> class Document(CatalogAware):
-    ...     def __init__(self, name, value):
-    ...         self.name = name
-    ...         self.value = value
-    ...
-    ...     def get_catalog_fields(self):
-    ...         return [KeywordField('name', is_stored=True),
-    ...                 FloatField('value', is_stored=True)]
-    ...
-    ...     def get_catalog_values(self):
-    ...         return {'name': self.name, 'value': self.value}
-    >>>
-    >>> catalog = make_catalog('catalog_test')
-    >>> doc1 = Document('pi', 3.1415)
-    >>> doc2 = Document('e', 2.718)
-    >>> catalog.index_document(doc1)
-    >>> catalog.index_document(doc2)
-    >>>
-    >>> results = catalog.search()
-    >>>
-    >>> for document in results.get_documents(sort_by='value'):
-    >>>     print document.name, document.value
-    e 2.718
-    pi 3.1415
-
-As you can see, you must register your new type with the function
-:func:`register\_field`.
-
-
 Indexing, Unindexing and Transactions
 =====================================
 
@@ -329,9 +263,6 @@ The operations that modify the catalog are just two:
 
     Index the given document, which must be an instance of the base class
     :class:`CatalogAware`.
-
-    If it is the later the method :meth:`get_catalog_indexes()` must be
-    implemented, it will return a dictionary with the values to be indexed.
 
 .. method:: Catalog.unindex_document(id)
 
@@ -347,6 +278,8 @@ The API to save or discard the changes is made by these two operations:
 .. method:: Catalog.abort_changes()
 
     Discard the changes done so far to the catalog.
+
+The "in memory" catalog doesn't support these two operations.
 
 
 .. _xapian-searching:
@@ -399,42 +332,30 @@ Queries
 Simple Queries
 ^^^^^^^^^^^^^^
 
-The two most simple queries are :class:`EqQuery` and :class:`PhraseQuery`:
+The simplest query is the :class:`PhraseQuery`:
 
 .. class:: EqQuery(name, value)
 
     Match all documents where the value of the field *name* matches or
-    contains the given *value*, which will be a single word.
+    contains the given *value*. *value* can be a sequence of words.
 
-.. class:: PhraseQuery(name, value)
+Typically we will use phrase queries when looking for in a *text* field or to
+find documents with a given value (*id*, *integer*, *date*, ...)
+::
 
-    Similar to :class:`EqQuery`, except that *value* is not a word, but a
-    *phrase* (this is to say, a sequence of words).
-
-Typically we will use phrase queries when looking for in a *text* field,
-because in this context the phrase query is a generalisation of the *equal*
-query::
-
-    >>>
-    # These two are the same
-    >>> EqQuery('author', 'marx')
-    >>> PhraseQuery('author', 'marx')
-    # This is non-sense, because 'karl marx' is not a word but two
-    >>> EqQuery('author', 'karl marx')
-
-The *equal* query (:class:`EqQuery`) will be typically used for any other kind
-of fields (keyword, boolean or integer). Because a phrase query is a non-sense
-in this context.
-
-To perform a :class:`EqQuery` or :class:`PhraseQuery` on a field, this one had
-to be declared *indexed*.
+    >>> query = PhraseQuery('author', 'marx')
 
 
-Range Queries
-^^^^^^^^^^^^^
+To perform a :class:`PhraseQuery` on a field, this one had to be declared
+*indexed*.
 
-The simple queries seen above are for exact matches. If we want to match all
-values within a range we use the :class:`RangeQuery`:
+
+Range Queries, Start Queries
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+The simple query seen above is for exact matches. If we want to match all
+values within a range or with a given beginning, we use the
+:class:`RangeQuery` and the :class:`StartQuery`.
 
 .. class::  RangeQuery(name, left, right)
 
@@ -448,6 +369,11 @@ values within a range we use the :class:`RangeQuery`:
     At least one of the limits must be given, both *left* and *right* can not
     be :obj:`None`.
 
+.. class:: StartQuery(name, value)
+
+    Match all documents whose field *name* has a value that starts with
+    *value*.
+
 Let's see an example with dates. If we index documents by their last
 modification time (*mtime*), we could search all documents that have been
 modified since the last week::
@@ -458,14 +384,13 @@ modified since the last week::
     >>> today = date.today()
     >>> last_week = today - timedelta(7)
     >>>
-    >>> last_week = last_week.strftime('%Y-%m-%d')
     >>> query = RangeQuery('mtime', last_week, None)
 
-Note that since we don't have a field type for dates, we have to transform the
-date values to strings (the field type used would be :class:`KeywordField`).
+Note that we directly send a :obj:`datetime` object to the
+:class:`RangeQuery`.
 
-To perform a :class:`RangeQuery` on a field, this one had to be declared
-*stored*.
+To perform a :class:`RangeQuery` or a :class:`StartQuery` on a field, this one
+had to be declared *stored*.
 
 
 Boolean Queries
@@ -503,7 +428,7 @@ two methods:
 
 .. class:: SearchResults
 
-    .. method:: get_n_documents()
+    .. method:: __len__()
 
         Return the number of documents found.
 
