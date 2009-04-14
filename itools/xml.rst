@@ -68,7 +68,8 @@ line number. The events implemented are:
     =============== ===================================
 
 All values (text nodes, comments, attribute values, etc.) are returned as byte
-strings, in the source encoding. doctype is an instance of a DocType object.
+strings, in the source encoding. ``doctype`` is an instance of a
+:class:`DocType` object.
 
 
 Attributes
@@ -106,39 +107,38 @@ references).
 To make this task easier :mod:`itools` offers support, *out of the box*, for
 several common XML namespaces. One of them is XHTML::
 
-   >>> from itools.xml import XMLParser, START_ELEMENT
-   >>> from itools.xml import get_namespace
-   >>> import itools.html
-   >>>
-   >>> data = ('<a xmlns="http://www.w3.org/1999/xhtml"'
-   ...         ' href="http://www.example.com"'
-   ...         ' title="Example" />')
-   >>>
-   >>> for type, value, line in XMLParser(data):
-   ...     if type == START_ELEMENT:
-   ...         tag_uri, tag_name, attributes = value
-   ...         namespace = get_namespace(tag_uri)
-   ...         element = namespace.get_element(tag_name)
-   ...         for attr_uri, attr_name in attributes:
-   ...             type = element.get_attr_datatype(attr_uri, attr_name)
-   ...             attr_value = attributes[(attr_uri, attr_name)]
-   ...             attr_value = type.decode(attr_value)
-   ...             print attr_name, type
-   ...             print repr(attr_value)
-   ...             print
-   xmlns <class 'itools.datatypes.primitive.String'>
-   'http://www.w3.org/1999/xhtml'
+    >>> from itools.xml import XMLParser, START_ELEMENT
+    >>> from itools.xml import get_attr_datatype
+    >>> import itools.html
+    >>>
+    >>> data = ('<a xmlns="http://www.w3.org/1999/xhtml"'
+    ...         ' href="http://www.example.com"'
+    ...         ' title="Example" />')
+    >>>
+    >>> for type, value, line in XMLParser(data):
+    ...     if type == START_ELEMENT:
+    ...         tag_uri, tag_name, attributes = value
+    ...         for attr_uri, attr_name in attributes:
+    ...             type = get_attr_datatype(tag_uri, tag_name,
+    ...                                      attr_uri, attr_name)
+    ...             attr_value = attributes[(attr_uri, attr_name)]
+    ...             attr_value = type.decode(attr_value)
+    ...             print attr_name, type
+    ...             print repr(attr_value)
+    ...             print
+    xmlns <class 'itools.datatypes.primitive.String'>
+    'http://www.w3.org/1999/xhtml'
 
-   href <class 'itools.datatypes.primitive.URI'>
-   <itools.uri.generic.Reference object at 0x8462d9c>
+    href <class 'itools.datatypes.primitive.URI'>
+    'http://www.example.com'
 
-   title <class 'itools.datatypes.primitive.Unicode'>
-   u'Example'
+    title <class 'itools.datatypes.base.Unicode({'context': 'title attribute'})'>
+    u'Example'
 
-The function :func:`get_namespace` will return the namespace handler for the
-given URI.  Then we can use the :meth:`get_attr_datatype` method to get the
-datatype (see chapter :mod:`itools.datatypes`) that will allow us to
-deserialize the attribute value.
+The function :func:`get_attr_datatype` will directly return the datatype (see
+chapter :mod:`itools.datatypes`) for a given namespace/tag/attribut
+namespace/attribut name. It will allow us to deserialize the attribute
+value.
 
 The package :mod:`itools.html` is the one that actually implements the
 namespace handler for XHTML.
@@ -150,7 +150,7 @@ Documents
 The package :mod:`itools.xml` also includes a handler class for XML files.
 The state of the handler is just the very same events the parser returns::
 
-    >>> from itools.xml import XMLFile
+    >>> from itools.xmlfile import XMLFile
     >>>
     >>> document = XMLFile('hello.xml')
     >>> for type, value, line in document.events:
@@ -158,7 +158,6 @@ The state of the handler is just the very same events the parser returns::
     ...     print 'Type:', type
     ...     print 'Value:', repr(value)
     ...     print
-    ...
     Line: 1
     Type: 0
     Value: ('1.0', 'UTF-8', None)
@@ -170,6 +169,11 @@ The state of the handler is just the very same events the parser returns::
     Line: 2
     Type: 2
     Value: (None, 'html', {})
+
+    Line: 2
+    Type: 4
+    Value: '\n  '
+    ...
 
 This means that the same logic can be used to manipulate the stream of events
 returned by the parser or the list of events kept by the handler.
