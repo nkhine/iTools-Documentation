@@ -50,7 +50,7 @@ line number. The events implemented are:
     =============== ================================================
     Event           Value
     =============== ================================================
-    *DOCUMENT_TYPE* ``(tag name, system_id, public_id, intSubSet?)``
+    *DOCUMENT_TYPE* ``(name, <DocType object>)``
     --------------- ------------------------------------------------
     *START_ELEMENT* ``(tag uri, tag name, attributes)``
     --------------- ------------------------------------------------
@@ -69,7 +69,8 @@ Attributes
 ----------
 
 The element attributes are returned as a dictionary where the key is the
-name of the attribute and the value is the value of the attribute.
+qualified name of the attribute (a tuple namespace / name) and the value is
+the value of the attribute.
 
 For example, when processing the XML fragment:
 
@@ -80,8 +81,8 @@ For example, when processing the XML fragment:
 
 The parser will return the attributes this way::
 
-    {'href': 'http://www.gnu.org/',
-     'title': "GNU's Not Unix"}
+    {(None, 'href'): 'http://www.gnu.org/',
+     (None, 'title'): "GNU's Not Unix"}
 
 
 The file handlers
