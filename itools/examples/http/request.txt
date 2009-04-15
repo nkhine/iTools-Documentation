@@ -1,0 +1,14 @@
+POST /;login HTTP/1.1
+Host: localhost:8080
+User-Agent: Mozilla/5.0
+Accept: text/html;q=0.9,text/plain;q=0.8,image/png,*/*;q=0.5
+Accept-Language: es,en;q=0.8,fr;q=0.5,pt;q=0.3
+Accept-Encoding: gzip,deflate
+Accept-Charset: ISO-8859-1,utf-8;q=0.7,*;q=0.7
+Keep-Alive: 300
+Connection: keep-alive
+Referer: http://localhost:8080/;login_form
+Content-Type: application/x-www-form-urlencoded
+Content-Length: 34
+
+username=toto%40xxx.com&password=a

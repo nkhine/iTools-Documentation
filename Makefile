@@ -23,7 +23,7 @@ help:
 
 clean:
 	-rm -rf .build/*
-	-rm -f hforge-docs-*.tgz
+	-rm -f hforge-docs-*.tgz itools-examples-*.tgz
 	cd itools && make clean
 	cd ikaaro && make clean
 	cd git && make clean
@@ -100,8 +100,11 @@ release: html pdf
 										 itools-tutorial.pdf user-guide.pdf \
 										 administrator-guide.pdf i18n.pdf git.pdf \
 										 style.pdf packaging.pdf windows.pdf
+	cd itools && tar czf ../itools-examples-$(GIT_VERSION).tgz examples
 	@echo
 	@echo "html doc is available ./hforge-docs-html-$(GIT_VERSION).tgz and"
 	@echo "pdf doc is available ./hforge-docs-pdf-$(GIT_VERSION).tgz"
+	@echo "itools-examples is available ./itools-examples-$(GIT_VERSION).tgz"
+
 
 
