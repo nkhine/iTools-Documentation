@@ -13,12 +13,12 @@ Introduction
 Requirements
 ------------
 
-Python 2.5.2 and :mod:`itools` [#admins-itools]_ 0.50 are required.  It is
+Python 2.5.2 and :mod:`itools` [#admins-itools]_ 0.60 are required. It is
 recommended to install the :mod:`pil` [#admins-pil]_ and :mod:`docutils`
 [#admins-docutils]_ packages.
 
-To be able to index office documents (ODF, PDF, etc.) the command line tools
-``wvText``, ``xlhtml``, ``pdftotext``, ``ppthtml`` and ``unrtf`` are needed.
+To be able to index office documents (ODF, PDF, etc.) the libraries :mod:`wv2`
+[#admins-wv2]_ and :mod:`poppler` [#admins-poppler]_  are needed.
 
 
 Download and Install
@@ -29,7 +29,7 @@ Then to install it just type::
 
     $ tar xzf ikaaro-X.Y.Z.tar.gz
     $ cd ikaaro-X.Y.Z
-    $ isetup-build.py
+    $ ipkg-build.py
     $ python setup.py install
 
 
@@ -49,8 +49,6 @@ create and manage instances:
     :file:`icms-update.py`         updates the instance (after a software upgrade)
     ------------------------------ -----------------------------------------------
     :file:`icms-update-catalog.py` rebuilds the catalog
-    ------------------------------ -----------------------------------------------
-    :file:`icms-restore.py`        recovers the instance (in case of a crash)
     ============================== ===============================================
 
 
@@ -151,28 +149,23 @@ The different options can be split in four groups:
 Start/Stop the server
 =====================
 
-The :mod:`ikaaro` CMS uses two processes to get the job done: a Web server and
-a process to send emails asynchronously. There are two scripts to start either
-one or the other of these processes: :file:`icms-start-server.py` and
-:file:`icms-start-spool.py`.  But usually we will use the
-:file:`icms-start.py` script, which starts both::
+The :mod:`ikaaro` CMS can be started simply be the use of the
+:file:`icms-start.py` script::
 
     $ icms-start.py my_instance
     [my_instance] Web Server listens *:8080
-    [my_instance] Start Mail Spool.
 
-By default the processes remain attached to the console, to stop them just
-type ``Ctrl+C``.  They are stopped ``gracefully``, what means that pending
+By default the process remain attached to the console, to stop it just
+type ``Ctrl+C``.  It is stopped ``gracefully``, what means that pending
 requests will be handled and the proper responses sent to the clients.
 
-To detach from the console use the ``--detach`` option.  Then, to stop the
+To detach from the console use the ``--detach`` option. Then, to stop the
 servers started this way use the :file:`icms-stop.py` script::
 
     $ icms-start.py --detach my_instance
     ...
     $ icms-stop.py my_instance
     [my_instance] Web Server shutting down (gracefully)...
-    [my_instance] Mail Spool shutting down (gracefully)...
 
 With the Web server running, we can open our favourite browser and go to the
 ``http://localhost:8080`` URL, to reach the user interface (see figure).
@@ -318,20 +311,9 @@ Recovering from a crash
 =======================
 
 Though unlikely, it may happen that the server crashes leaving a transaction
-in the middle, for example, if there is a power failure at the bad time.  If
-this happens, the server will refuse to start again::
-
-    $ icms-start.py my_instance
-    The database is not in a consistent state, to fix it up type:
-
-        $ icms-restore.py <instance>
-
-To recover the instance (by completing or removing the aborted transaction),
-just run the :file:`icms-restore.py` script::
-
-    $ icms-restore.py my_instance
-    Restore database from backup (y/N)? y
-    * Restoring... DONE
+in the middle, for example, if there is a power failure at the bad time. If
+this happens, the server will refuse to start again, but it must provide some
+instructions to restore the database (``git`` commands).
 
 
 .. rubric:: Footnotes
@@ -341,6 +323,10 @@ just run the :file:`icms-restore.py` script::
 .. [#admins-pil] http://www.pythonware.com/products/pil/
 
 .. [#admins-docutils] http://docutils.sourceforge.net
+
+.. [#admins-wv2] http://sourceforge.net/projects/wvware/
+
+.. [#admins-poppler] http://poppler.freedesktop.org/
 
 .. [#admins-logs] http://www.w3.org/Daemon/User/Config/Logging.html\#common-logfile-format
 
