@@ -14,7 +14,7 @@ Distribution Utilities* (a.k.a. :mod:`distutils`).  Above them :mod:`itools`
 adds a thin layer to simplify the work of making up a new Python package.
 
 This document describes this thin layer, and two related scripts from the
-*isetup* family: :file:`isetup-build.py` and :file:`isetup-update-locale.py`.
+*isetup* family: :file:`ipkg-build.py` and :file:`ipkg-update-locale.py`.
 
 
 Anatomy of an :mod:`itools` based package
@@ -52,10 +52,10 @@ reduces the :file:`setup.py` module to a few lines of boilerplate:
 :file:`setup.py`::
 
     # Import from itools
-    from itools.utils import setup
+    from itools.pkg import setup
 
     if __name__ == '__main__':
-        setup(globals())
+        setup()
 
 
 Example: :file:`mypkg`
@@ -125,7 +125,7 @@ prefer to store it in the :file:`version.txt` file, for instance:
 The first advantage of this approach is the possibility to automatize the
 generation of the version number with the help of external tools.  This is
 what we do with *Git* [#packaging-git]_  (see :ref:`git`) and the
-:file:`isetup-build.py` script (see section :ref:`packaging-build`).
+:file:`ipkg-build.py` script (see section :ref:`packaging-build`).
 
 The second advantage is the possibility to export the version number with just
 two lines of boilerplate in the init module:
@@ -133,9 +133,9 @@ two lines of boilerplate in the init module:
 :file:`__init__.py`::
 
     # Import from itools
-    from itools.utils import get_version
+    from itools.core import get_version
 
-    __version__ = get_version(globals())
+    __version__ = get_version()
 
 This way we can easily know the version of an installed package::
 
@@ -199,7 +199,7 @@ Build & Install
 
 .. code-block:: sh
 
-    $ isetup-build.py
+    $ ipkg-build.py
     $ python setup.py install
 
 
@@ -208,19 +208,19 @@ Make a source release
 
 .. code-block:: sh
 
-    $ isetup-build.py
+    $ ipkg-build.py
     $ python setup.py sdist
 
 
-The :file:`isetup-build.py` script
-----------------------------------
+The :file:`ipkg-build.py` script
+--------------------------------
 
-The :file:`isetup-build.py` script uses *Git* and the configuration file to
+The :file:`ipkg-build.py` script uses *Git* and the configuration file to
 automatize a few tasks.  We can test it with our example:
 
 .. code-block:: sh
 
-    $ isetup-build.py
+    $ ipkg-build.py
     * Version: master-200712081934
     * Build MANIFEST file (list of files to install)
 
@@ -228,7 +228,7 @@ automatize a few tasks.  We can test it with our example:
 The version number
 ^^^^^^^^^^^^^^^^^^
 
-First thing the :file:`isetup-build.py` script does is to figure out the
+First thing the :file:`ipkg-build.py` script does is to figure out the
 version number, which is made up of two parts:
 
 .. code-block:: none
@@ -267,7 +267,7 @@ without the timestamp are public releases.
 The :file:`MANIFEST` file
 ^^^^^^^^^^^^^^^^^^^^^^^^^
 
-The last thing the :file:`isetup-build` script does is to build the
+The last thing the :file:`ipkg-build` script does is to build the
 :file:`MANIFEST` file: the list of files that make up the package. This list
 is made up of:
 
@@ -308,16 +308,16 @@ In this example the source language is English, and there are two target
 languages, Spanish and French.
 
 
-The :file:`isetup-update-locale.py` script
-------------------------------------------
+The :file:`ipkg-update-locale.py` script
+----------------------------------------
 
-Running the :file:`isetup-update-locale.py` at this point will automatically
+Running the :file:`ipkg-update-locale.py` at this point will automatically
 create the :file:`locale` folder, the POT template, and a PO file for each
 language:
 
 .. code-block:: sh
 
-    $ isetup-update-locale.py
+    $ ipkg-update-locale.py
     * Extract text strings from Python files..
     * Update PO template
     * Update PO files:
@@ -332,7 +332,7 @@ language:
     `-- locale.pot
 
 Since the PO files belong to the source, we should add them to the *Git*
-archive every time we run the :file:`isetup-update-locale.py` script:
+archive every time we run the :file:`ipkg-update-locale.py` script:
 
 .. code-block:: sh
 
@@ -345,13 +345,13 @@ archive every time we run the :file:`isetup-update-locale.py` script:
 Building a multilinguage package
 --------------------------------
 
-At this point we must come back to the :file:`isetup-build.py` script. If we
+At this point we must come back to the :file:`ipkg-build.py` script. If we
 run it again, once the package has been internationalized, we will find out it
 does a little more than before:
 
 .. code-block:: sh
 
-    $ isetup-build.py
+    $ ipkg-build.py
     * Version: master-200712101700
     * Compile message catalogs: en es fr
     * Build MANIFEST file (list of files to install)
@@ -365,7 +365,7 @@ does a little more than before:
     |-- fr.po
     `-- locale.pot
 
-The :file:`isetup-build.py` script has compiled the PO files to produce one
+The :file:`ipkg-build.py` script has compiled the PO files to produce one
 binary MO file per language. These binary files will be used at run time by
 the internationalization logic to expose a multilingual interface to the user.
 
@@ -376,7 +376,7 @@ Tell *Git* to ignore non-source files
 This may be a good time to make a break in the exposition and explain how to
 tell *Git* to ignore non-source files.
 
-We have seen the :file:`isetup-build.py` script produces a number of files
+We have seen the :file:`ipkg-build.py` script produces a number of files
 that do not belong to the source code, but that are required to make a new
 relase. These files must not be tracked by *Git*. To tell *Git* to ignore the
 non-source files we must create the :file:`.gitignore` file:
@@ -411,12 +411,12 @@ make a public release of a multilingual package:
 
 * Once the strings in the user interface are frozen, we must update the
   translations.  To do so we first extract the text strings from the source
-  files with the help of the :file:`isetup-update-locale.py` script, as seen
+  files with the help of the :file:`ipkg-update-locale.py` script, as seen
   before:
 
   .. code-block:: sh
 
-      $ isetup-update-locale.py
+      $ ipkg-update-locale.py
       * Extract text strings from Python files..
       * Extract text strings from XHTML files
       * Update PO template
@@ -441,7 +441,7 @@ make a public release of a multilingual package:
 
   .. code-block:: sh
 
-      $ isetup-build.py
+      $ ipkg-build.py
       * Version: 1.0.2
       * Compile message catalogs: en es fr
       * Build MANIFEST file (list of files to install)
