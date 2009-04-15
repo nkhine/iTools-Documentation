@@ -7,7 +7,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2009-04-15 08:04+CET\n"
+"POT-Creation-Date: 2009-04-15 14:04+CET\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -34,20 +34,21 @@ msgid ""
 "suddenly he espied something shinning amid the straw."
 msgstr ""
 
+#: hello.py:13
+msgid "Hello World"
+msgstr "Hola Mundo"
+
 #: fable.xhtml.en:20
-#, fuzzy
 msgctxt "paragraph"
 msgid "Precious things are for those that can prize them."
 msgstr "Las cosas de valor son para aquellos que pueden apreciarlas."
 
 #: fable.xhtml.en:9
-#, fuzzy
 msgctxt "heading"
 msgid "The Cock and the Pearl"
 msgstr "El Gallo y la Perla"
 
 #: fable.xhtml.en:6
-#, fuzzy
 msgctxt "title"
 msgid "The Cock and the Pearl"
 msgstr "El Gallo y la Perla"
@@ -65,6 +66,3 @@ msgid ""
 "ho!\" quoth he, \"that's for me,\" and soon rooted it out from beneath the "
 "straw."
 msgstr ""
-
-#~ msgid "Hello World"
-#~ msgstr "Hola Mundo"

@@ -56,9 +56,10 @@ With the PO handler we can work with the PO file, for example to ask for the
 translation of a sentence::
 
     >>> from itools.gettext import POFile
+    >>> from itools.srx import TEXT
     >>>
     >>> po = POFile('es.po')
-    >>> print po.gettext(u'Hello World')
+    >>> print po.gettext([(TEXT, 'Hello Word')])
     Hola Mundo
 
 
@@ -153,8 +154,8 @@ allows, for example, an application to use the domain of :mod:`itools`::
     >>> from itools.gettext import get_domain
     >>>
     >>> domain = get_domain('itools')
-    >>> print domain.gettext(u'yes', 'fr')
-    oui
+    >>> print domain.gettext(u'but', 'fr')
+    mais
 
 To make your domain globally available, just register it::
 
@@ -225,7 +226,7 @@ automatically generated.
 In the same way, you can extract the messages from any ODF [#i18n-odf]_
 document:
 
-.. code-block: sh
+.. code-block:: sh
 
     $ igettext-extract.py document.odt > locale.pot
 
@@ -242,7 +243,7 @@ Add a new translation
 If we want to add a new translation, it is straightforward, just copy the
 :file:`locale.pot` file to the new language file. For example:
 
-.. code-block: sh
+.. code-block:: sh
 
     $ cp locale/locale.pot locale/pt.po
 
@@ -256,7 +257,7 @@ Update a translation
 If we want to update an existing translation, it is not harder. We use the
 ``msgmerge`` command (from the *GNU gettext* toolset):
 
-.. code-block: sh
+.. code-block:: sh
 
     $ msgmerge -U -s locale/es.po locale/locale.pot
 
