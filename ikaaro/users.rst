@@ -157,7 +157,7 @@ Modules
 Tracker
 -------
 
-The issue tracker is a useful tool for project management (see figure).
+The issue tracker is an useful tool for project management (see figure).
 
 .. figure:: figures/tracker.*
    :align: center
@@ -212,7 +212,5 @@ figures).
 .. [#users-rfc2396]
 
     Note that the semicolon makes part of the URI standard (RFC 2396),
-    specifically it separates the segment name from the segment parameters.}
-
-
+    specifically it separates the segment name from the segment parameters.
 
