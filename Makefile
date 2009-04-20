@@ -1,5 +1,6 @@
-# Git repository
+# Version
 GIT_VERSION = $(shell bin/release.py)
+DATE = $(shell date '+%F')
 
 # You can set these variables from the command line.
 SPHINXOPTS    =
@@ -8,6 +9,10 @@ SPHINXBUILD   = sphinx-build
 # Internal variables.
 PAPEROPT     = -D latex_paper_size=a4
 ALLSPHINXOPTS   = -d .build/doctrees $(PAPEROPT) $(SPHINXOPTS) .
+
+# Epydoc
+ITOOLS_PATH= ${shell python -c "import itools; print itools.__path__[0]"}
+EPYDOC=epydoc --no-frames --docformat restructuredtext --no-private --introspect-only --no-sourcecode --name itools --url http://www.hforge.org/itools/
 
 .PHONY: clean help html pdf pickle htmlhelp latex changes linkcheck web
 
@@ -23,7 +28,7 @@ help:
 
 clean:
 	-rm -rf .build/*
-	-rm -f hforge-docs-*.tgz itools-examples-*.tgz
+	-rm -f hforge-docs-*.tgz itools-examples-*.tgz itools-reference-*.tgz
 	cd itools && make clean
 	cd ikaaro && make clean
 	cd git && make clean
@@ -96,15 +101,25 @@ linkcheck:
 
 release: html pdf
 	cd .build/html && tar czf ../../hforge-docs-html-$(GIT_VERSION).tgz *
+	${EPYDOC} -o itools-reference-$(DATE) ${ITOOLS_PATH}/*/__init__.py
+	tar -czhf itools-reference-$(DATE).tgz itools-reference-$(DATE)
+	rm -rf itools-reference-$(DATE)
+
+	${EPYDOC} --pdf -o itools-reference-pdf ${ITOOLS_PATH}/*/__init__.py
+	mv itools-reference-pdf/api.pdf .build/latex/itools-reference.pdf
+	rm -rf itools-reference-pdf
 	cd .build/latex && tar czf ../../hforge-docs-pdf-$(GIT_VERSION).tgz \
 										 itools-tutorial.pdf user-guide.pdf \
 										 administrator-guide.pdf i18n.pdf git.pdf \
-										 style.pdf packaging.pdf windows.pdf
+										 style.pdf packaging.pdf windows.pdf itools-reference.pdf
+
 	cd itools && tar czf ../itools-examples-$(GIT_VERSION).tgz examples
+
 	@echo
+	@echo "***** SUMMARY *****"
 	@echo "html doc is available ./hforge-docs-html-$(GIT_VERSION).tgz and"
 	@echo "pdf doc is available ./hforge-docs-pdf-$(GIT_VERSION).tgz"
 	@echo "itools-examples is available ./itools-examples-$(GIT_VERSION).tgz"
-
+	@echo "itools-reference is available ./itools-reference-$(DATE).tgz"
 
 
