@@ -1,7 +1,7 @@
 Itools
 ######
 
-Tutorial for *itools 0.50*, contents:
+Tutorial for *itools 0.60*, contents:
 
 .. toctree::
    :maxdepth: 1
