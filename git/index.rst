@@ -175,32 +175,33 @@ How to create new Branches
 ==========================
 
 Now imagine that you want to work not in the *master* branch, but in the
-latest stable branch, *0.15* in this example. To do so you will have to create
-a new local branch based on *0.15*, this is done with the command ``git
+latest stable branch, *0.60* in this example. To do so you will have to create
+a new local branch based on *0.60*, this is done with the command ``git
 branch``::
 
-    $ git branch 0.15 origin/0.15
+    $ git branch 0.60 origin/0.60
+    Branch 0.60 set up to track remote branch refs/remotes/origin/0.60.
     $ git branch
-    0.15
+    0.60
     * master
 
 To switch from one branch to another we use ``git checkout``::
 
-    $ git checkout 0.15
-    Switched to branch "0.15"
+    $ git checkout 0.60
+    Switched to branch "0.60"
     $ git branch
-    * 0.15
+    * 0.60
       master
 
-As we have seen before to synchronize your *0.15* branch you will use ``git
+As we have seen before to synchronize your *0.60* branch you will use ``git
 fetch`` and ``git rebase``::
 
     # Fetch origin
     $ git fetch origin
 
     # Synchronize
-    $ git checkout 0.15
-    $ git rebase origin/0.15
+    $ git checkout 0.60
+    $ git rebase origin/0.60
 
 
 How to make a Commit
@@ -220,7 +221,7 @@ example, we are going to make some really useless changes::
 What have we done? Use ``git status`` to have an overview::
 
     $ git status
-    # On branch 0.15
+    # On branch 0.60
     # Changed but not updated:
     #   (use "git add <file>..." to update what will be committed)
     #
@@ -272,7 +273,7 @@ Now you must tell ``git`` what changes you want to commit, for this we use the
     $ git add __init__.py
     $ git add USELESS.txt
     $ git status
-    # On branch 0.15
+    # On branch 0.60
     # Changes to be committed:
     #   (use "git reset HEAD <file>..." to unstage)
     #
@@ -308,7 +309,7 @@ To send your patches to be included in the main tree, the first step is always
 to synchronize::
 
     $ git fetch origin
-    $ git rebase origin/0.15
+    $ git rebase origin/0.60
     ...
 
 If there have been new patches in the origin branch that conflict with your
@@ -318,7 +319,7 @@ conflicts and go ahead.
 
 Now you can check the patches you have done with ``git log``::
 
-    $ git log origin/0.15..0.15
+    $ git log origin/0.60..0.60
     commit 612f41cd3aa3f9dce0f0f54a55e46971d29e5ee8
     Author: J. David Ibanez <jdavid@itaapy.com>
     Date:   Wed Jun 27 15:50:45 2007 +0200
@@ -327,7 +328,7 @@ Now you can check the patches you have done with ``git log``::
 
 Everything is alright? Time to build the patches, with ``git format-patch``::
 
-    $ git format-patch origin/0.15
+    $ git format-patch origin/0.60
     0001-Add-some-useless-comments.patch
 
 This call creates one file for every patch. Now you can send the patches.
