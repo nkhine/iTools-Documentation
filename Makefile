@@ -25,6 +25,7 @@ help:
 	@echo "  htmlhelp  to make HTML files and a HTML help project"
 	@echo "  changes   to make an overview over all changed/added/deprecated items"
 	@echo "  linkcheck to check all external links for integrity"
+	@echo "  release   to make four tar.gz files to easily deploy the doc"
 
 clean:
 	-rm -rf .build/*
