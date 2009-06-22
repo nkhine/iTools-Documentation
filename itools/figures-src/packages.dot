@@ -21,7 +21,6 @@ digraph G {
 
 #  "itools.handlers" -> "itools.core";
 #  "itools.handlers" -> "itools.datatypes";
-  "itools.handlers" -> "itools.git";
 #  "itools.handlers" -> "itools.uri";
   "itools.handlers" -> "itools.vfs";
 
@@ -42,8 +41,6 @@ digraph G {
   "itools.ical" -> "itools.csv";
 #  "itools.ical" -> "itools.datatypes";
 #  "itools.ical" -> "itools.handlers";
-#  "itools.ical" -> "itools.html";
-  "itools.ical" -> "itools.stl";
 #  "itools.ical" -> "itools.xapian";
 
 #  "itools.odf" -> "itools.core";
@@ -68,7 +65,7 @@ digraph G {
 
 #  "itools.pkg" -> "itools.core";
 #  "itools.pkg" -> "itools.datatypes";
-#  "itools.pkg" -> "itools.git";
+  "itools.pkg" -> "itools.git";
   "itools.pkg" -> "itools.handlers";
 #  "itools.pkg" -> "itools.uri";
 #  "itools.pkg" -> "itools.vfs";
