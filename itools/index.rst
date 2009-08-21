@@ -11,6 +11,7 @@ Tutorial for *itools 0.60*, contents:
    handlers
    http
    ical
+   log
    odf
    rss
    stl
