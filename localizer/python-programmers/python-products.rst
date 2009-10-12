@@ -35,18 +35,19 @@ Internationalize
 
     Import the needed stuff::
 
-        from Products.Localizer import Gettext
+        from Products.Localizer import utils
 
-        _ = Gettext.translation(globals())
-        N_ = Gettext.dummy
+        _ = utils.translation(globals())
 
-    The underscode (\_) is used to translate messages. The N\_ function is
-    used for defered translations, it markups the message for translation but
-    don't translates it.
+    The underscode (\_) is used to translate messages.
     ::
 
         def x(self, ...):
-            return _('Hello world!')
+            return _(u'Hello world!')
+
+
+    Messages must be unicode strings (not byte strings), otherwise the
+    ``zgettext.py`` script (see below) won't detect them.
 
 
 Localize
@@ -72,13 +73,4 @@ files. Finally, type:
 
 to compile the ".po" files and generate the ".mo" files that will be used at
 run time to get the translations.
-
-
-Unicode
--------
-
-Besides the gettext method the ugettext one is also available. Both methods
-have the same interface, the difference is that ugettext returns unicode
-strings.
-
 
