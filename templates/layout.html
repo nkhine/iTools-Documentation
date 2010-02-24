@@ -1,0 +1,18 @@
+{% extends "!layout.html" %}
+
+{% block relbar1 %}
+
+  <div id="wrapper">
+    <div id="header">
+      <a href="http://www.hforge.org/;view">Home</a>
+      <a href="http://www.hforge.org/;projects">Projects</a>
+      <a href="http://docs.hforge.org/">Documentation</a>
+      <a href="http://www.hforge.org/community">Community</a>
+      <a id="top-menu-login" href="http://www.hforge.org/;login" id="top-menu-login">Login</a>
+    </div>
+  </div>
+
+  {{ super() }}
+
+{% endblock %}
+

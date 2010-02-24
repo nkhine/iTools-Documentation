@@ -1,0 +1,44 @@
+@import url("default.css");
+
+body {
+  background-color: #729FCF;
+}
+
+#header {
+  background: #729FCF url(logo.png) no-repeat scroll left bottom;
+  color: #FFFFFF;
+  font-size: 14px;
+  padding: 40px 10px 5px 0;
+  text-align: right;
+  font-weight: bold;
+  text-decoration:none;
+}
+
+#header #top-menu-login {
+  background-image:url(lock.png);
+  background-position:left center;
+  background-repeat:no-repeat;
+  padding-left:18px;
+}
+
+#header a{
+  color: #FFFFFF;
+  font-family: verdana,arial,helvetica,sans-serif;
+  padding-right: 5px;
+}
+
+#header a:hover {
+  text-decoration: underline;
+}
+
+div.document {
+  background-color: #729FCF;
+}
+
+div.related {
+  background-color: #396FA9;
+}
+
+div.sphinxsidebar a {
+  color: #000000;
+}
