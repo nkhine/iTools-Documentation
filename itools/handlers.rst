@@ -41,12 +41,15 @@ to the file's content as a raw byte string::
     >>> from itools.handlers import File
     >>>
     >>> file = File('itools.pdf')
-    >>> print file.uri
-    file:///home/jdavid/sandboxes/itools-docs/itools.pdf
+    >>> print file.key
+    file:///home/jdavid/sandboxes/hforge-docs/itools.pdf
 
-The instance variable :attr:`uri` tells us what file in the file system (or
-somewhere else) this file handler is attached to.  To inspect its data we can
-type::
+The instance variable :attr:`key` is the unique identifier where the file
+handler is attached to on the file system. The default file system is a
+virtual file system (vfs) that supports various storage methods so we use
+URIs.
+
+To inspect its data we can type::
 
     >>> print type(file.data)
     <type 'str'>
@@ -177,12 +180,12 @@ when we try to retrieve its data::
     >>>
     >>> file = TextFile('itools.tex')
     >>> print file.__dict__.keys()
-    ['uri']
+    ['key']
     >>>
     >>> print len(file.data)
     994739
     >>> print file.__dict__.keys()
-    ['dirty', 'timestamp', 'data', 'uri', 'encoding']
+    ['dirty', 'timestamp', 'data', 'key', 'encoding']
 
 Here two new instance variables show up:
 
@@ -273,10 +276,11 @@ This is the full collection of load related methods:
 
       Updates the handler's state with the contents of the given open file.
 
-.. method:: File.load_state_from(uri)
+.. method:: File.load_state_from(key)
 
       Updates the handler's state with the contents of the file resource
-      identified by the given URI reference.
+      identified by the given key reference. The key is specific to the file
+      system used by the handler (absolute URI, absolute path...).
 
 
 Note that the last three methods actually modify the handler's state with a
@@ -335,10 +339,10 @@ This is the programming interface for save operations:
       Saves the handler's state to its associated file. So the handler and
       its file resource are synchronized again.
 
-.. method:: File.save_state_to(uri)
+.. method:: File.save_state_to(key)
 
       Saves the handler's state to the file resource identified by the given
-      URI.
+      key.
 
 .. method:: File.save_state_to_file(file)
 
@@ -391,10 +395,10 @@ The programming interface of the registry is:
     the variable :attr:`class_mimetypes`, which must be a list with the
     mimetypes the handler class is able to manage.
 
-.. function:: get_handler_class(uri)
+.. function:: get_handler_class(key)
 
     Returns the handler class that better fits for the resource identified by
-    the given uri.
+    the given key reference that could be a URI or a path.
 
 To illustrate the register interface, this is how a handler class looks
 like::
@@ -419,19 +423,19 @@ be stored anywhere::
     >>> from itools.html import HTMLFile
     >>>
     >>> file = HTMLFile()
-    >>> print file.uri
+    >>> print file.key
     None
 
 Note that we have created the handler calling to the handler class, but
 without passing any arguments. This creates a new handler that is not
-associated to any resource, the value of :attr:`handler.uri` is :obj:`None`.
+associated to any resource, the value of :attr:`handler.key` is :obj:`None`.
 The general prototype for a handler class is:
 
-*<handler_class>(uri=None, \*\*kw)*
+*<handler_class>(key=None, \*\*kw)*
 
-    If a URI reference is given, build a handler instance for it.
+    If a key reference is given, build a handler instance for it.
 
-    If a URI reference is not given, create a new handler that is not
+    If a key reference is not given, create a new handler that is not
     associated to any resource. Named parameters may be passed, they will be
     used to initialize the handler's state (which named parameters are
     accepted depends on the handler class).
@@ -447,6 +451,8 @@ For instance, we are going to build an HTML handler with some title::
       </head>
       <body></body>
     </html>
+
+Those specific keyword parameters are different for each handler class.
 
 
 State initialization
@@ -476,33 +482,33 @@ The Database System
 
 The file handlers as we have seen so far are not a attached to a database::
 
-    >>> from itools.handlers import get_handler
+    >>> from itools.handlers import File
     >>>
-    >>> file = get_handler('itools.pdf')
+    >>> file = File('itools.pdf')
     >>> print file.database
     None
 
 In this section we are going to see the database system for file handlers,
 which adds some nice features: *caching* and *transactions*.
-::
 
-    >>> from itools.handlers import RWDatabase
+Itools provides a default database::
+
+    >>> from itools.handlers import default_database as db
     >>>
-    >>> db = RWDatabase(5000)
     >>> file = db.get_handler('itools.pdf')
     >>> print file.database
-    <itools.handlers.database.Database object at 0x2b138fde6910>
+    <itools.handlers.database.RWDatabase object at 0x2b138fde6910>
 
 
 Caching
 -------
 
-The :func:`get_handler` function does not support caching, every time it is
-called it will create a new handler::
+The handler constructor does not support caching, every time it is called it
+will create a new handler::
 
-    >>> get_handler('itools.pdf')
+    >>> File('itools.pdf')
     <itools.handlers.file.File object at 0x2b1392fdd590>
-    >>> get_handler('itools.pdf')
+    >>> File('itools.pdf')
     <itools.handlers.file.File object at 0x2b1392fdd550>
 
 But with the database, we get always the same file handler, because it is
@@ -520,11 +526,23 @@ We can inspect the cache::
     ...     print db.cache[key]
     ...     print
     ...
-    file:///home/jdavid/sandboxes/itools-docs/itools.pdf
+    file:///home/jdavid/sandboxes/hforge-docs/itools.pdf
     <itools.handlers.file.File object at 0x2b1392fdd510>
 
-The cache is just a mapping from URI to file handler. Because the key is a
-URI, we can keep in the database remote handlers.
+The cache is just a mapping from key to file handler. Because the database
+uses vfs file system by default, we can keep in the database remote handlers.
+
+Most of the time you don't need to import the default database itself but its
+:func:`get_handler` entry point::
+
+    >>> db.get_handler('itools.pdf')
+    <itools.handlers.file.File object at 0x2b1392fdd510>
+    >>>
+    >>> from itools.handlers import get_handler
+    >>> get_handler('itools.pdf')
+    <itools.handlers.file.File object at 0x2b1392fdd510>
+    >>>> _.database
+    <itools.handlers.database.RWDatabase object at 0x2b138fde6910>
 
 
 Programming Interface
@@ -532,38 +550,37 @@ Programming Interface
 
 This is the programming interface provided by the database:
 
-.. class:: Handler
+.. class:: RWDatabase
 
 
-  .. method:: get_handler(self, reference, cls=None)
+  .. method:: get_handler(self, key, cls=None)
 
-        Returns the handler for the given URI reference.  If there is not any
-        handler at the given URI reference, raises the :exc:`LookupError`
-        exception.
+        Returns the handler for the given key reference.  If there is not any
+        handler at the given key, raises the :exc:`LookupError` exception.
 
         By default it will figure out the best handler class to use.  The
         parameter *cls* allows to explicitly choose the handler class to use.
 
-  .. method:: has_handler(reference)
+  .. method:: has_handler(key)
 
-        Returns :obj:`True` if there is a handler at the given URI reference,
+        Returns :obj:`True` if there is a handler at the given key reference,
         :obj:`False` if there is not.
 
-  .. method:: get_handler_names(reference)
+  .. method:: get_handler_names(key)
 
-        If the given URI reference identifies a folder (instead of a file),
+        If the given key reference identifies a folder (instead of a file),
         this method will return a list with all the names of the resources
         within that folder.
 
-  .. method:: get_handlers(reference)
+  .. method:: get_handlers(key)
 
-        If the given URI reference identifies a folder, this method will
+        If the given key reference identifies a folder, this method will
         return all the handlers within that folder.  This method is a
         generator.
 
-  .. method:: set_handler(reference, handler)
+  .. method:: set_handler(key, handler)
 
-        If there is not a resource at the given URI reference, adds the given
+        If there is not a resource at the given key reference, adds the given
         handler to it.
 
         This method is meant to be used to add new files::
@@ -573,33 +590,33 @@ This is the programming interface provided by the database:
             >>> file = TextFile()
             >>> print file.database
             None
-            >>> print file.uri
+            >>> print file.key
             None
             # Add the new file
             >>> db.set_handler('/tmp/test.txt', file)
             >>> print file.database
             <itools.handlers.database.Database object at 0x2b1392fdd590>
-            >>> print file.uri
+            >>> print file.key
             file:///tmp/test.txt
 
-        The file handler is attached to the database at the given URI
+        The file handler is attached to the database at the given key
         reference.
 
-  .. method:: del_handler(reference)
+  .. method:: del_handler(key)
 
-        Removes the handler at the given URI reference.  If it is a folder
+        Removes the handler at the given key reference.  If it is a folder
         removes all its content recursively.
 
   .. method:: copy_handler(source, target)
 
-        Copies the handler from the given *source* URI reference to the given
-        *target* URI reference.  If it is a folder the all its content is
+        Copies the handler from the given *source* key reference to the given
+        *target* key reference.  If it is a folder the all its content is
         copied recursively.
 
   .. method:: move_handler(source, target)
 
-        Moves the handler from the given *source* URI reference to the given
-        *target* URI reference.  If it is a folder the all its content is
+        Moves the handler from the given *source* key reference to the given
+        *target* key reference.  If it is a folder the all its content is
         moved.
 
 All modification methods do the changes in-memory.  Changes can be later
@@ -627,26 +644,27 @@ folders don't keep any data, there is no point to cache them.  And the lack of
 state means they do not have the :attr:`timestamp` and :attr:`dirty` variables
 either.
 
-Folders are just a URI in a database::
+Folders are just a key in a database::
 
     >>> tmp = db.get_handler('/tmp')
     >>> print tmp.database
     <itools.handlers.database.Database object at 0x2afa17af4910>
-    >>> print tmp.uri
+    >>> print tmp.key
     file:///tmp
 
 The folder's API is basically the same of the database's API we have seen in
 Section :ref:`handlers-database`.  The difference is that with the database
-API relative URI references are resolved against the *current working
-directory*; while with folders they are resolved against the folder's URI.
+API relative key references are resolved against the *current working
+directory*; while with folders they are resolved against the folder's key
+reference.
 
 So these lines are equivalent::
 
     >>>
-    # Database: URI references relative to working directory
+    # Database: key references relative to working directory
     >>> print db.has_handler('/tmp/test.txt')
     False
-    # Folder: URI references relative to folder's uri
+    # Folder: key references relative to folder's key
     >>> print tmp.has_handler('test.txt')
     False
 
@@ -719,9 +737,40 @@ will be left in an inconsistent state.
 
 To address this issue, for applications that require the transactions to be
 atomic whatever happens, the :mod:`itools.handlers` package includes the
-:class:`GitDatabase` class.
+:class:`GitDatabase` class. See func:`make_git_database` to start with.
 
-TODO
+An even safer approach is to not allow any modification at all. RODatabase
+and ROGitDatabase follow this approach.
+
+
+Changing Filesystems
+====================
+
+If you need more performance, You can limit yourself to the local filesystem
+and benefit from faster access.
+
+Itools brings a :class:`lfs` object limited to the local filesystem but
+faster than :class:`vfs`. The GitDatabase uses it because Git itself could
+only commit files physically written in its repository.
+
+To create a database that benefits from it is straightforward::
+
+    >>> from itools.fs import lfs
+    >>> from itools.handlers import RWDatabase
+    >>>
+    >>> database = RWDatabase(fs=lfs)
+
+Everything else you learnt about databases apply, except of course URIs are
+not supported anymore::
+
+    >>> test = database.get_handler('/tmp/test.txt')
+    >>> test.key
+    >>> '/tmp/test.txt'
+    >>> database.get_handler('http://example.com/')
+    Traceback (most recent call last):
+    [...]
+    LookupError: the resource "/home/jdavid/sandboxes/hforge-docs/http:/example.com" does not exist
+
 
 .. _handlers-example:
 

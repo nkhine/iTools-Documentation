@@ -1,6 +1,7 @@
 *~
 .*.swp
 .build
+tags
 
 git/figures/*
 i18n/figures/*
