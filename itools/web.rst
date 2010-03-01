@@ -22,13 +22,14 @@ Example: Hello World
 Let's see a basic usage of the framework::
 
     # Import from itools
-    from itools.web import Server, RootResource, BaseView
-    from itools.handlers import RWDatabase
+    from itools.web import WebServer, RootResource, BaseView
+    from itools.handlers import RODatabase
 
 
     class MyView(BaseView):
         access = True
         def GET(self, resource, context):
+            context.set_content_type('text/plain')
             return 'Hello World'
 
     class MyRoot(RootResource):
@@ -37,8 +38,8 @@ Let's see a basic usage of the framework::
 
     if __name__ == '__main__':
         root = MyRoot()
-        server = Server(root)
-        server.database = RWDatabase(5000)
+        server = WebServer(root)
+        server.database = RODatabase()
         server.start()
 
 To test the code above, type:
@@ -54,7 +55,7 @@ These few lines of code expose several aspects of :mod:`itools.web` that we
 will see later with more details:
 
 
-.. class:: Server
+.. class:: WebServer
 
     This class implements a Web server. It expects the root of your
     application as the first parameter of its constructor.
@@ -172,13 +173,14 @@ To illustrate what has been explained so far, see this code::
     import datetime
 
     # Import from itools
-    from itools.handlers import RWDatabase
+    from itools.handlers import RODatabase
     from itools.uri import get_reference
-    from itools.web import Server, RootResource, Resource, BaseView
+    from itools.web import WebServer, RootResource, Resource, BaseView
 
     class CalendarView(BaseView):
         access = True
         def GET(self, resource, context):
+            context.content_type = 'text/html'
             month = int(resource.name)
             year = int(resource.parent.name)
             cal = calendar.month(year, month)
@@ -224,8 +226,8 @@ To illustrate what has been explained so far, see this code::
 
     if __name__ == '__main__':
         root = MyRoot()
-        server = Server(root)
-        server.database = RWDatabase(5000)
+        server = WebServer(root)
+        server.database = RODatabase()
         server.start()
 
 To try this example type:
@@ -322,17 +324,6 @@ The context
 
 .. class:: Context
 
-  .. attribute:: request
-
-        The request object, with all the informations sent by the client.
-        Usually you won't access directly to it, because the API offered by
-        the :obj:`context` object is preferred, and enough most of the time.
-
-  .. attribute:: response
-
-        The response object, which will be sent to the client. You can
-        manipulate it directly, though this is rarely needed.
-
   .. attribute:: server
 
         The Web server. Useful for example to access the error log.
@@ -412,6 +403,7 @@ example::
     class MyView(BaseView):
         access = True
         def GET(self, resource, context):
+            context.set_content_type("text/plain")
             name = context.get_form_value('name', default='World')
             return 'Hello %s' % name
 
