@@ -1,7 +1,7 @@
-:mod:`itools.vfs` Virtual File System
+:mod:`itools.fs` Virtual File System
 *************************************
 
-.. module:: itools.vfs
+.. module:: itools.fs
    :synopsis: Virtual File System
 
 .. index::
@@ -14,17 +14,22 @@ A *virtual file system* provides a file oriented interface for resources
 accessed through different protocols, may they be stored in the local file
 system, in a remote web or ftp server, or somewhere else.
 
-The package :mod:`itools.vfs` provides such an interface. It is based on the
+The package :mod:`itools.fs` provides such an interface. It is based on the
 couple gio/gvfs from the gnome project.
 
 
 Usage
 =====
 
-The programming interface of :mod:`itools.vfs` appears as a set of global
-functions. To be used this way::
+`itools.fs` is organised into 2 modules:
 
-    >>> from itools import vfs
+- `itools.fs.vfs`: The real virtual file system.
+- `itools.fs.lfs`: A specific implementation for local use only.
+
+The programming interface of :mod:`itools.fs.vfs` or `itools.fs.lfs` appears as
+a set of global functions. To be used this way::
+
+    >>> from itools.fs import vfs
     >>> import itools.http
     >>>
     >>> uri = 'http://example.com/'
@@ -45,8 +50,8 @@ working directory*.
 Files
 -----
 
-The function :func:`itools.vfs.open`, seen in the example above, returns an
-object that offers the same programming interface of Python files.
+The function :func:`vfs.open`, seen in the example above, returns an object
+that offers the same programming interface of Python files.
 
 We are not going to explain what this programming interface is, just check
 the Python's documentation.
@@ -55,9 +60,9 @@ the Python's documentation.
 Folders
 -------
 
-From the point of view of :mod:`itools.vfs` a folder is an object which offers
-exactly the same programming interface of :mod:`itools.vfs`, but which
-resolves relative URIs not to the current working directory, but to some URI.
+From the point of view of :mod:`itools.fs` a folder is an object which offers
+exactly the same programming interface of :obj:`vfs`, but which resolves
+relative URIs not to the current working directory, but to some URI.
 
 For example::
 
@@ -86,7 +91,7 @@ folder.
 Summary of the API
 ==================
 
-Here we introduce the programming interface of :mod:`itools.vfs`, for the
+Here we introduce the programming interface of :mod:`itools.fs.[lv]fs`, for the
 details check the reference chapter.
 
 

@@ -8,6 +8,7 @@ Tutorial for *itools 0.60*, contents:
 
    csv
    datatypes
+   fs
    handlers
    http
    ical
@@ -16,7 +17,6 @@ Tutorial for *itools 0.60*, contents:
    rss
    stl
    uri
-   vfs
    web
    workflow
    xapian
