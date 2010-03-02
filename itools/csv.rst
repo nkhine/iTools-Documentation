@@ -42,9 +42,11 @@ Introduction to the programming interface
 Let's assume we have a :file:`clients.csv` file, we will load it as we do with
 any other handler::
 
-    >>> from itools.csv import CSVFile
+    >>> import itools.csv
+    >>> from itools.handlers import RWDatabase
     >>>
-    >>> clients = CSVFile('clients.csv')
+    >>> rw_database = RWDatabase()
+    >>> clients = ro_database.get_handler('clients.csv')
 
 And we can work with it straight away::
 
@@ -129,7 +131,7 @@ with a type (integers, booleans, etc.). We do so by sub-classing::
 Now, if we load the CSV file with our new shinny class, we will be able
 to get values with a type, and to do other nice things::
 
-    >>> clients = Clients('clients.csv')
+    >>> clients = rw_database.get_handler('clients.csv', Clients)
     >>>
     >>> row = clients.get_row(0)
     >>> row
