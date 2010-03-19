@@ -10,7 +10,7 @@
 .. contents::
 
 The :mod:`itools.http` package offers an HTTP server with a simple programming
-interface.  It builds on the HTTP server provided by the `libsoup
+interface. It builds on the HTTP server provided by the `libsoup
 <http://live.gnome.org/LibSoup>`_ C library (which is wrapped by the
 :mod:`itools.soup` package).
 

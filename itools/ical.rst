@@ -19,10 +19,10 @@ What is an ical file?
 =====================
 
 An ical file follow a strict organization. It is composed by a main element
-called icalendar object. This element contains a few properties and
-components.  These components contain themselves several properties and
-sometimes inner components. The properties are composed by a name, a value,
-and some optionnal parameters. Below is a simple example:
+called icalendar object. This element contains a few properties and components.
+These components contain themselves several properties and sometimes inner
+components. The properties are composed by a name, a value, and some optional
+parameters. Below is a simple example:
 
 .. code-block:: none
 
