@@ -20,7 +20,7 @@ from textwrap import wrap, fill
 
 # Import from itools
 from itools.core import add_type
-from itools.handlers import register_handler_class, get_handler
+from itools.handlers import register_handler_class, ro_database
 from itools.handlers import TextFile
 from itools.stl import stl
 
@@ -145,5 +145,5 @@ register_handler_class(TaskTracker)
 
 
 if __name__ == '__main__':
-    task_tracker = TaskTracker('itools.tt')
+    task_tracker = ro_database.get_handler('itools.tt')
     task_tracker.show_open_tasks()

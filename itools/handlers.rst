@@ -14,24 +14,23 @@ By the word *handler* we mean a *file handler*, this is to say an object that
 allows to handle a file: inspect the data it contains, and change it.
 
 The :mod:`itools.handlers` package relies on the :mod:`itools` *Virtual File
-System*  (see :mod:`itools.vfs`).  This means that we can handle remote files,
-for example we can do this::
+System*  (see :mod:`itools.fs`) and the database object. This means that we
+can handle remote files, for example we can do this::
 
-    >>> import itools.http
+    >>> from itools.handlers import ro_database
     >>> from itools.html import HTMLFile
-    >>> page = HTMLFile('http://example.com/')
+    >>> page = ro_database.get_handler('http://example.com/', HTMLFile)
 
-It is also included a database system, which basically offers *lazy load*,
-*caching* and *atomic transactions*.
+The database system offers *lazy load*, *caching* and *atomic transactions*.
 
 
 File Handlers
 =============
 
 The :mod:`itools` package includes handlers for many file formats, like XML,
-HTML or CSV.  Each one is able to parse and load the content of the file into
+HTML or CSV. Each one is able to parse and load the content of the file into
 an appropriate data structure; for example a CSV handler will store the data
-as a table: a list of rows, where each row is a list of values.  Each handler
+as a table: a list of rows, where each row is a list of values. Each handler
 class provides a distinct API to inspect and manipulate this data structure.
 
 When there is not a handler class available that understands the file format
@@ -40,14 +39,13 @@ to the file's content as a raw byte string::
 
     >>> from itools.handlers import File
     >>>
-    >>> file = File('itools.pdf')
+    >>> file = ro_database.get_handler('itools.pdf', File)
     >>> print file.key
     file:///home/jdavid/sandboxes/hforge-docs/itools.pdf
 
 The instance variable :attr:`key` is the unique identifier where the file
-handler is attached to on the file system. The default file system is a
-virtual file system (vfs) that supports various storage methods so we use
-URIs.
+handler is attached to on the file system. The default file system is a virtual
+file system (fs) that supports various storage methods so we use URIs.
 
 To inspect its data we can type::
 
@@ -68,9 +66,8 @@ The API to access and change the data of a basic file handler is quite simple:
 
         Changes the content of the handler to the given byte string.
 
-The :class:`File` class is the base class for all file handlers.  The
-following figure shows a subset of the handler classes included in
-:mod:`itools`.
+The :class:`File` class is the base class for all file handlers. The following
+figure shows a subset of the handler classes included in :mod:`itools`.
 
 .. figure:: figures/handlers.*
     :align: center
@@ -82,12 +79,12 @@ Text Files
 ----------
 
 When the file we want to work with is a text file, we can use the
-:class:`TextFile` handler class.  This one represents the file's content as a
+:class:`TextFile` handler class. This one represents the file's content as a
 text string::
 
     >>> from itools.handlers import TextFile
     >>>
-    >>> file = TextFile('itools.tex')
+    >>> file = ro_database.get_handler('itools.tex', TextFile)
     >>> print type(file.data)
     <type 'unicode'>
     >>> print file.data[:40]
@@ -109,19 +106,19 @@ The public API is much similar to the base :class:`File` handler's API:
         Changes the content of the handler to the given text string.
 
 Here the method :meth:`set_data` expects a text string instead of a byte
-string.  And the method :meth:`to_str` accepts an optional parameter to define
+string. And the method :meth:`to_str` accepts an optional parameter to define
 the encoding used to serialize the handler's content.
 
 
 Configuration Files
 -------------------
 
-While not an standard file format, the format supported by the
+While not a standard file format, the format supported by the
 :class:`ConfigFile` class can be used for example to manage some configuration
 files found in Unix systems.
 
 It is also useful to study this handler class as an example of a file handler
-with some structure.  This is an excerpt of the :file:`setup.conf` file from
+with some structure. This is an excerpt of the :file:`setup.conf` file from
 the :mod:`itools` package::
 
     # The name of the package
@@ -138,11 +135,11 @@ We have comments and variables::
 
     >>> from itools.handlers import ConfigFile
     >>>
-    >>> config = ConfigFile('setup.conf')
+    >>> config = ro_database.get_handler('setup.conf', ConfigFile)
     >>> print config.get_value('author_name')
     J. David Ibáñez
 
-The code above shows how to get the value of a variable.  Follows an excerpt
+The code above shows how to get the value of a variable. Follows an excerpt
 of the public API specific to the :class:`ConfigFile` class:
 
 .. class:: ConfigFile
@@ -176,16 +173,16 @@ Loading
 File handlers support lazy load, what means that the handler is only loaded
 when we try to retrieve its data::
 
-    >>> from itools.handlers import TextFile
+    >>> from itools.handlers import TextFile, ro_database
     >>>
-    >>> file = TextFile('itools.tex')
+    >>> file = ro_database.get_handler('itools.tex', TextFile)
     >>> print file.__dict__.keys()
-    ['key']
+    ['key', 'database']
     >>>
     >>> print len(file.data)
     994739
     >>> print file.__dict__.keys()
-    ['dirty', 'timestamp', 'data', 'key', 'encoding']
+    ['encoding', 'timestamp', 'database', 'dirty', 'key', 'data']
 
 Here two new instance variables show up:
 
@@ -212,9 +209,10 @@ changed after the file handler was loaded, what means that our file handler is
     # Start the Python interpreter
     $ python
     ...
-    >>> from itools.handlers import TextFile
+    >>> from itools.handlers import TextFile, RWDatabase
+    >>> rw_database = RWDatabase()
     >>>
-    >>> test = TextFile('test.txt')
+    >>> test = rw_database.get_handler('test.txt', TextFile)
     >>> test.load_state()
     >>> print test.timestamp
     2007-11-19 20:14:57
@@ -313,7 +311,7 @@ state::
     Bye
 
 To know whether the handler has been modified to become *newer* than the
-associated file resource we just check the :attr:`dirty` variable.  To save
+associated file resource we just check the :attr:`dirty` variable. To save
 the changes made to the associated file resource we use :meth:`save_state`::
 
     >>> test.save_state()
@@ -357,26 +355,26 @@ The Registry
 ------------
 
 So far we have explicitly chosen which handler class we want to use to work
-with some file.  It is also possible to let :mod:`itools.handlers` to choose
-the better handler class available for us, with the :func:`get_handler`
+with some file. It is also possible to let :mod:`itools.handlers` to choose
+the better handler class available for us, with the :meth:`get_handler`
 function::
 
-    >>> from itools.handlers import get_handler
+    >>> from itools.handlers import ro_database
     >>>
-    >>> get_handler('itools.pdf')
+    >>> ro_database.get_handler('itools.pdf')
     <itools.handlers.file.File object at 0x2b65c5f01910>
 
-Here the :func:`get_handler` function did not found an specific handler class
+Here the :meth:`get_handler` method did not found a specific handler class
 for the PDF document, so it chose the basic :class:`File` class.  But we can
 do it better::
 
     >>> import itools.pdf
     >>>
-    >>> get_handler('itools.pdf')
+    >>> ro_database.get_handler('itools.pdf')
     <itools.pdf.pdf.PDFFile object at 0xf5d450>
 
 The :mod:`itools.handlers` package provides the basic infrastructure, and a
-few handler classes.  For most specific handler classes the right package must
+few handler classes. For most specific handler classes the right package must
 be imported, like :mod:`itools.pdf`, :mod:`itools.xml` or :mod:`itools.odf`.
 
 
@@ -395,11 +393,6 @@ The programming interface of the registry is:
     the variable :attr:`class_mimetypes`, which must be a list with the
     mimetypes the handler class is able to manage.
 
-.. function:: get_handler_class(key)
-
-    Returns the handler class that better fits for the resource identified by
-    the given key reference that could be a URI or a path.
-
 To illustrate the register interface, this is how a handler class looks
 like::
 
@@ -416,7 +409,7 @@ New Handlers
 ^^^^^^^^^^^^
 
 So far we have seen how to load a file handler for a file resource that
-already exists, in the local filesystem or somewhere else.  But sometimes we
+already exists, in the local filesystem or somewhere else. But sometimes we
 want to create new files, or just to work with temporary files that will never
 be stored anywhere::
 
@@ -442,7 +435,7 @@ The general prototype for a handler class is:
 
 For instance, we are going to build an HTML handler with some title::
 
-    >>> file = HTMLFile(title=u'Hello World')
+    >>> file = HTMLFile(title='Hello World')
     >>> print file.to_str()
     <html>
       <head>
@@ -460,7 +453,7 @@ State initialization
 
 When writing a new handler class the method :meth:`new` must be implemented,
 it initializes the handler's state for handlers not associated to a file
-resource.  For example, the handler class for a PDF file may look like::
+resource. For example, the handler class for a PDF file may look like::
 
     from itools.handlers import File
 
@@ -480,39 +473,23 @@ PDF file format).
 The Database System
 ===================
 
-The file handlers as we have seen so far are not a attached to a database::
-
-    >>> from itools.handlers import File
-    >>>
-    >>> file = File('itools.pdf')
-    >>> print file.database
-    None
-
 In this section we are going to see the database system for file handlers,
 which adds some nice features: *caching* and *transactions*.
 
-Itools provides a default database::
+Itools provides a default read only database::
 
-    >>> from itools.handlers import default_database as db
+    >>> from itools.handlers import ro_database as db
     >>>
     >>> file = db.get_handler('itools.pdf')
     >>> print file.database
-    <itools.handlers.database.RWDatabase object at 0x2b138fde6910>
+    <itools.handlers.database.RODatabase object at 0x2b138fde6910>
 
 
 Caching
 -------
 
-The handler constructor does not support caching, every time it is called it
-will create a new handler::
-
-    >>> File('itools.pdf')
-    <itools.handlers.file.File object at 0x2b1392fdd590>
-    >>> File('itools.pdf')
-    <itools.handlers.file.File object at 0x2b1392fdd550>
-
-But with the database, we get always the same file handler, because it is
-stored in the cache::
+The database supports caching. Every time we call :meth:`get_handler` , we get
+always the same file handler, because it is stored in the cache::
 
     >>> db.get_handler('itools.pdf')
     <itools.handlers.file.File object at 0x2b1392fdd510>
@@ -530,19 +507,7 @@ We can inspect the cache::
     <itools.handlers.file.File object at 0x2b1392fdd510>
 
 The cache is just a mapping from key to file handler. Because the database
-uses vfs file system by default, we can keep in the database remote handlers.
-
-Most of the time you don't need to import the default database itself but its
-:func:`get_handler` entry point::
-
-    >>> db.get_handler('itools.pdf')
-    <itools.handlers.file.File object at 0x2b1392fdd510>
-    >>>
-    >>> from itools.handlers import get_handler
-    >>> get_handler('itools.pdf')
-    <itools.handlers.file.File object at 0x2b1392fdd510>
-    >>>> _.database
-    <itools.handlers.database.RWDatabase object at 0x2b138fde6910>
+uses fs file system by default, we can keep in the database remote handlers.
 
 
 Programming Interface
@@ -619,15 +584,15 @@ This is the programming interface provided by the database:
         *target* key reference.  If it is a folder the all its content is
         moved.
 
-All modification methods do the changes in-memory.  Changes can be later
-aborted or saved.  This makes up transaction.  Section
+All modification methods do the changes in-memory. Changes can be later
+aborted or saved. This makes up transaction. Section
 :ref:`handlers-transactions` explains the details.
 
 
 Folders
 -------
 
-All the :mod:`itools.handlers` package is about files, not folders.  Files are
+All the :mod:`itools.handlers` package is about files, not folders. Files are
 the things that contain data, folders are there just to simplify our lives.
 
 When the :meth:`get_handler` method is called for a folder resource, a folder
@@ -638,10 +603,10 @@ handler is returned::
     >>> db.get_handler('/tmp')
     <itools.handlers.folder.Folder object at 0x2b1392fdd5d0>
 
-First difference with file handlers: folders are not cached.  Every time we
-ask for a folder resource, a different handler will be returned.  Since
-folders don't keep any data, there is no point to cache them.  And the lack of
-state means they do not have the :attr:`timestamp` and :attr:`dirty` variables
+First difference with file handlers: folders are not cached. Every time we ask
+for a folder resource, a different handler will be returned. Since folders
+don't keep any data, there is no point to cache them. And the lack of state
+means they do not have the :attr:`timestamp` and :attr:`dirty` variables
 either.
 
 Folders are just a key in a database::
@@ -653,7 +618,7 @@ Folders are just a key in a database::
     file:///tmp
 
 The folder's API is basically the same of the database's API we have seen in
-Section :ref:`handlers-database`.  The difference is that with the database
+Section :ref:`handlers-database`. The difference is that with the database
 API relative key references are resolved against the *current working
 directory*; while with folders they are resolved against the folder's key
 reference.
@@ -674,8 +639,8 @@ So these lines are equivalent::
 Transactions
 ------------
 
-As explained above changes done to the database are kept in memory, so they
-can later be aborted or saved.  This makes-up a transaction::
+As explained above changes done to the database are kept in memory, so they can
+later be aborted or saved. This makes-up a transaction::
 
     >>> from itools.handlers import TextFile
     >>>
@@ -699,7 +664,7 @@ can later be aborted or saved.  This makes-up a transaction::
     hello world
 
 If you check the file system, you will see there is not any file named
-:file:`test.txt` or :file:`test2.txt` in the temporary folder.  Reached this
+:file:`test.txt` or :file:`test2.txt` in the temporary folder. Reached this
 point you can either abort the changes::
 
     >>> db.abort_changes()
@@ -730,7 +695,7 @@ The programming interface for transactions is pretty simple:
 A *bullet-proof* Database
 =========================
 
-The database system seen before is simple and nice, but not very robust.  For
+The database system seen before is simple and nice, but not very robust. For
 example, if there is a power shut-down while the :meth:`save_changes` method
 is running, the transaction will be half saved, and our filesystem database
 will be left in an inconsistent state.
@@ -828,10 +793,6 @@ by the field name followed by the field value, both separated by a colon. If a
 field value is very long it can be written in multiple lines, where the second
 and next lines start by a space.
 
-This very same file can be found in the examples directory with the
-:mod:`itools.tt` name. Using our own filename extension (``tt``) will prove
-useful, as we will see later.
-
 
 De-serialization
 ----------------
@@ -881,7 +842,7 @@ First, our handler class :class:`TaskTracker` inherits from the handler class
 :class:`TextFile`, because it is intended to manage a text file.
 
 The method :meth:`_load_state_from_file` is the one to implement to parse and
-load a new file format.  It is responsible to de-serialize the resource and
+load a new file format. It is responsible to de-serialize the resource and
 build a data structure on memory that represents it.
 
 Lets try the code::
@@ -889,8 +850,9 @@ Lets try the code::
     >>> from pprint import pprint
     >>> from textwrap import fill
     >>> from tracker import TaskTracker
+    >>> from itools.handlers import ro_database
     >>>
-    >>> task_tracker = TaskTracker('itools.tt')
+    >>> task_tracker = ro_database.get_handler('itools.tt')
     >>>
     >>> pprint(task_tracker.tasks)
     [<tracker.Task object at 0xb7aebd4c>,
@@ -903,7 +865,7 @@ Lets try the code::
     >>> print fill(task.description, width=60)
     A new chapter that explains how to write file handler
     classes must be written, it should go immediately after the
-    chapter  that introduces file handlers.
+    chapter that introduces file handlers.
     >>> print task.state
     closed
 
@@ -1010,9 +972,9 @@ close the first task, add a new one, and look at what we have.
 Now, don't forget to save the task tracker in the file system, so you can come
 back to it later::
 
-    >>> from itools.handlers import Database
+    >>> from itools.handlers import RWDatabase
     >>>
-    >>> db = Database()
+    >>> db = RWDatabase()
     >>> db.set_handler('/tmp/test_tracker.tt', task_tracker)
     >>> db.save_changes()
 
@@ -1022,9 +984,9 @@ Register
 
 However::
 
-    >>> from itools.handlers import get_handler
+    >>> from itools.handlers import ro_database
     >>>
-    >>> task_tracker = get_handler('/tmp/test_tracker.tt')
+    >>> task_tracker = ro_database.get_handler('/tmp/test_tracker.tt')
     >>> print task_tracker
     <itools.handlers.text.TextFile object at 0xb7c00f0c>
 
@@ -1049,11 +1011,11 @@ parent::
 
 And *voilà*::
 
-    >>> task_tracker = get_handler('/tmp/test_tracker.tt')
+    >>> task_tracker = ro_database.get_handler('/tmp/test_tracker.tt')
     >>> print task_tracker
     <tracker.TaskTracker object at 0xb7af084c>
 
-The full code can be found in :file:`examples/handlers/tracker.py`.
+The full code can be found in :file:`examples/handlers/TaskTracker.py`.
 
 
 
