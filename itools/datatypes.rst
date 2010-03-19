@@ -150,7 +150,7 @@ types:
         >>> QName.encode((None, 'href'))
         'href'
 
-.. class:: itools.vfs.FileName
+.. class:: itools.fs.FileName
 
     Usually filenames include extensions to indicate the file type, and
     sometimes other information like the language. The filename decoder will
@@ -158,7 +158,7 @@ types:
     filename, the second element is the file type, and the last element is the
     language. For example::
 
-        >>> from itools.vfs import FileName
+        >>> from itools.fs import FileName
         >>> FileName.decode('index.html.en')
         ('index', 'html', 'en')
         >>> FileName.decode('index.html')
