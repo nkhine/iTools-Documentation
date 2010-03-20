@@ -50,7 +50,7 @@ an XML string as the output.
 This is the way we use **STL**::
 
     # Import from itools
-    from itools.handlers import get_handler
+    from itools.handlers import ro_database
     from itools.stl import stl
 
     # Build the namespace
@@ -59,7 +59,7 @@ This is the way we use **STL**::
     namespace['description'] = 'XXX'
 
     # Load the template
-    template = get_handler('template.xml')
+    template = ro_database.get_handler('template.xml')
 
     # Call STL
     output = stl(template, namespace)
