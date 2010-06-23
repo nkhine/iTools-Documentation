@@ -6,23 +6,31 @@ digraph G {
 #  "itools.csv" -> "itools.core";
 #  "itools.csv" -> "itools.datatypes";
   "itools.csv" -> "itools.handlers";
-#  "itools.csv" -> "itools.vfs";
-  "itools.csv" -> "itools.xapian";
+
+#  "itools.database" -> "itools.core";
+#  "itools.database" -> "itools.datatypes";
+#  "itools.database" -> "itools.fs";
+  "itools.database" -> "itools.handlers";
+#  "itools.database" -> "itools.uri";
+  "itools.database" -> "itools.xapian";
 
 #  "itools.datatypes" -> "itools.core";
   "itools.datatypes" -> "itools.uri";
 
+#  "itools.fs" -> "itools.core";
+  "itools.fs" -> "itools.datatypes";
+  "itools.fs" -> "itools.i18n";
+#  "itools.fs" -> "itools.uri";
+
 #  "itools.gettext" -> "itools.core";
 #  "itools.gettext" -> "itools.handlers";
   "itools.gettext" -> "itools.srx";
-#  "itools.gettext" -> "itools.xml";
 
   "itools.git" -> "itools.core";
 
 #  "itools.handlers" -> "itools.core";
 #  "itools.handlers" -> "itools.datatypes";
-#  "itools.handlers" -> "itools.uri";
-  "itools.handlers" -> "itools.vfs";
+  "itools.handlers" -> "itools.fs";
 
 #  "itools.html" -> "itools.core";
 #  "itools.html" -> "itools.datatypes";
@@ -32,19 +40,21 @@ digraph G {
 
 #  "itools.http" -> "itools.datatypes";
   "itools.http" -> "itools.handlers";
-#  "itools.http" -> "itools.i18n";
-#  "itools.http" -> "itools.uri";
 
-  "itools.i18n" -> "itools.core";
+  "itools.i18n";
 
 #  "itools.ical" -> "itools.core";
   "itools.ical" -> "itools.csv";
 #  "itools.ical" -> "itools.datatypes";
 #  "itools.ical" -> "itools.handlers";
-#  "itools.ical" -> "itools.xapian";
+
+  "itools.log";
+
+  "itools.loop";
 
 #  "itools.odf" -> "itools.core";
 #  "itools.odf" -> "itools.datatypes";
+#  "itools.odf" -> "itools.fs";
 #  "itools.odf" -> "itools.handlers";
   "itools.odf" -> "itools.relaxng";
   "itools.odf" -> "itools.stl";
@@ -55,30 +65,29 @@ digraph G {
 
 #  "itools.pdf" -> "itools.core";
 #  "itools.pdf" -> "itools.datatypes";
+#  "itools.pdf" -> "itools.fs";
 #  "itools.pdf" -> "itools.handlers";
   "itools.pdf" -> "itools.relaxng";
   "itools.pdf" -> "itools.stl";
 #  "itools.pdf" -> "itools.uri";
-#  "itools.pdf" -> "itools.vfs";
 #  "itools.pdf" -> "itools.xml";
 #  "itools.pdf" -> "itools.xmlfile";
 
 #  "itools.pkg" -> "itools.core";
 #  "itools.pkg" -> "itools.datatypes";
+#  "itools.pkg" -> "itools.fs";
   "itools.pkg" -> "itools.git";
   "itools.pkg" -> "itools.handlers";
-#  "itools.pkg" -> "itools.uri";
-#  "itools.pkg" -> "itools.vfs";
 
 #  "itools.python" -> "itools.handlers";
   "itools.python" -> "itools.srx";
 
 #  "itools.relaxng" -> "itools.core";
 #  "itools.relaxng" -> "itools.datatypes";
+#  "itools.relaxng" -> "itools.fs";
   "itools.relaxng" -> "itools.handlers";
   "itools.relaxng" -> "itools.xml";
 #  "itools.relaxng" -> "itools.uri";
-#  "itools.relaxng" -> "itools.vfs";
 
 #  "itools.rest" -> "itools.handlers";
   "itools.rest" -> "itools.html";
@@ -89,16 +98,18 @@ digraph G {
   "itools.rss" -> "itools.handlers";
   "itools.rss" -> "itools.xml";
 
+#  "itools.srx" -> "itools.core";
+  "itools.srx" -> "itools.handlers";
+  "itools.srx" -> "itools.xml";
+
 #  "itools.stl" -> "itools.core";
 #  "itools.stl" -> "itools.datatypes";
   "itools.stl" -> "itools.gettext";
   "itools.stl" -> "itools.html";
+  "itools.stl" -> "itools.log";
 #  "itools.stl" -> "itools.uri";
 #  "itools.stl" -> "itools.xml";
-
-#  "itools.srx" -> "itools.core";
-  "itools.srx" -> "itools.handlers";
-  "itools.srx" -> "itools.xml";
+#  "itools.stl" -> "itools.xmlfile";
 
 #  "itools.tmx" -> "itools.core";
 #  "itools.tmx" -> "itools.datatypes";
@@ -108,25 +119,20 @@ digraph G {
   "itools.uri" -> "itools.abnf";
   "itools.uri" -> "itools.core";
 
-#  "itools.vfs" -> "itools.core";
-  "itools.vfs" -> "itools.datatypes";
-  "itools.vfs" -> "itools.i18n";
-
 #  "itools.web" -> "itools.core";
 #  "itools.web" -> "itools.datatypes";
 #  "itools.web" -> "itools.gettext";
-#  "itools.web" -> "itools.handlers";
   "itools.web" -> "itools.http";
 #  "itools.web" -> "itools.i18n";
+#  "itools.web" -> "itools.log";
   "itools.web" -> "itools.stl";
 #  "itools.web" -> "itools.uri";
 
   "itools.workflow";
 
 #  "itools.xapian" -> "itools.datatypes";
+  "itools.xapian" -> "itools.fs";
 #  "itools.xapian" -> "itools.i18n";
-#  "itools.xapian" -> "itools.uri";
-  "itools.xapian" -> "itools.vfs";
 
 #  "itools.xliff" -> "itools.core";
 #  "itools.xliff" -> "itools.datatypes";
