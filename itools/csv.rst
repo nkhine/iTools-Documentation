@@ -31,9 +31,6 @@ The functional scope of the CSV handler, what it is able to do, is:
 * Offers a programming interface to get, add and remove rows.
 * If an schema is defined, the values will be deserialized, so we will work
   with text strings, integers and booleans (instead of byte strings).
-* With the help of the schema, it will be possible to quickly search for rows
-  that match one or another value (kind of an *SQL select* for a single
-  table).
 
 
 Introduction to the programming interface
@@ -46,7 +43,7 @@ any other handler::
     >>> from itools.handlers import RWDatabase
     >>>
     >>> rw_database = RWDatabase()
-    >>> clients = ro_database.get_handler('clients.csv')
+    >>> clients = rw_database.get_handler('clients.csv')
 
 And we can work with it straight away::
 
@@ -116,6 +113,7 @@ If we define a schema we will be able to load not byte strings, but values
 with a type (integers, booleans, etc.). We do so by sub-classing::
 
     from itools.datatypes import Integer, Unicode, String, Date
+    from itools.csv import CSVFile
 
     class Clients(CSVFile):
 
@@ -152,45 +150,4 @@ to get values with a type, and to do other nice things::
 As we have seen the schema is defined with the class variable :attr:`columns`,
 which gives a name to each column, and with the class variable :attr:`schema`,
 which defines the type.
-
-
-Index and Search
-================
-
-And if we add a little more information to the schema, we will have a fast
-search interface::
-
-    class Clients(CSVFile):
-
-        columns = ['client_id', 'name', 'email',
-            'registration_date']
-
-        schema = {
-            'client_id': Integer,
-            'name': Unicode(is_indexed=True),
-            'email': String,
-            'registration_date': Date(is_indexed=True)}
-
-In this example we will search the CSV file by the columns *name* and
-*registration date*, so we specify that these columns must be indexed with
-``is_indexed=True``.
-
-Now we can use the search interface::
-
-    >>> clients = Clients('clients.csv')
-    >>>
-    >>> results = clients.search(name='Macuk')
-    >>> print results
-    [0]
-
-The search interface is rather powerful, but since it is the same offered by
-the :mod:`itools.catalog` package, we prefer not to repeat ourselves. Check
-the section :ref:`xapian-searching` in the xapian chapter for the details.
-
-What we will explain here is that the value returned by the method
-:meth:`search` is a list with all the rows that matched the query. So maybe we
-want to get the row to do something with it::
-
-    >>> for row_number in clients.search(name='Macuk'):
-    ...     row = clients.get_row(row_number)
 
