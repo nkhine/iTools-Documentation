@@ -11,8 +11,8 @@ digraph G {
 #  "itools.database" -> "itools.datatypes";
 #  "itools.database" -> "itools.fs";
   "itools.database" -> "itools.handlers";
+#  "itools.xapian" -> "itools.i18n";
 #  "itools.database" -> "itools.uri";
-  "itools.database" -> "itools.xapian";
 
 #  "itools.datatypes" -> "itools.core";
   "itools.datatypes" -> "itools.uri";
@@ -129,10 +129,6 @@ digraph G {
 #  "itools.web" -> "itools.uri";
 
   "itools.workflow";
-
-#  "itools.xapian" -> "itools.datatypes";
-  "itools.xapian" -> "itools.fs";
-#  "itools.xapian" -> "itools.i18n";
 
 #  "itools.xliff" -> "itools.core";
 #  "itools.xliff" -> "itools.datatypes";
