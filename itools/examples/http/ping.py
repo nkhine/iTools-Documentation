@@ -16,8 +16,13 @@
 
 # Import from itools
 from itools.http import HTTPServer
+from itools.loop import Loop
 
 class Ping(HTTPServer):
+    def listen(self, address, port):
+        super(Ping, self).listen(address, port)
+        self.add_handler('/', self.path_callback)
+
     def path_callback(self, soup_message, path):
         method = soup_message.get_method()
         body = '%s %s' % (method, path)
@@ -25,4 +30,7 @@ class Ping(HTTPServer):
         soup_message.set_response('text/plain', body)
 
 server = Ping()
-server.start()
+server.listen('localhost', 8080)
+
+loop = Loop()
+loop.run()

@@ -11,8 +11,7 @@
 
 The :mod:`itools.http` package offers an HTTP server with a simple programming
 interface. It builds on the HTTP server provided by the `libsoup
-<http://live.gnome.org/LibSoup>`_ C library (which is wrapped by the
-:mod:`itools.soup` package).
+<http://live.gnome.org/LibSoup>`_ C library.
 
 .. note::
 
@@ -24,8 +23,13 @@ Example:
 .. code-block:: python
 
    from itools.http import HTTPServer
+   from itools.loop import Loop
 
    class Ping(HTTPServer):
+       def listen(self, address, port):
+           super(Ping, self).listen(address, port)
+           self.add_handler('/', self.path_callback)
+
        def path_callback(self, soup_message, path):
            method = soup_message.get_method()
            body = '%s %s' % (method, path)
@@ -33,5 +37,7 @@ Example:
            soup_message.set_response('text/plain', body)
 
    server = Ping()
-   server.start()
+   server.listen('localhost', 8080)
 
+   loop = Loop()
+   loop.run()
