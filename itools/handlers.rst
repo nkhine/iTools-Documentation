@@ -149,7 +149,7 @@ of the public API specific to the :class:`ConfigFile` class:
         Sets the variable with the given name to the given value. If a comment
         is given, attach it to the variable.
 
-  .. method:: get_value(name, type=None)
+  .. method:: get_value(name, type=None, default=None)
 
         Returns the value of the variable with the given name. The value
         returned will be a byte string, unless the *type* parameter is passed.
@@ -197,7 +197,7 @@ Here two new instance variables show up:
       A :class:`datetime` value, the last time the state of the handler has
       changed, or None while the handler and the file are synchronised.
 
-These variables are *read-only*: do not change them by hand!  The
+These variables are *read-only*: do not change them by hand! The
 :attr:`dirty` variable will be studied in the section :ref:`handlers-saving`.
 
 The :attr:`timestamp` variable allows to know whether the file resource was
@@ -220,7 +220,7 @@ changed after the file handler was loaded, what means that our file handler is
     False
 
 Here we have learned how to explicitly load the state of a file handler, with
-the :meth:`load_state` method.  And how to check whether the handler is
+the :meth:`load_state` method. And how to check whether the handler is
 up-to-date or not, with the :meth:`is_outdated` method.
 
 But what happens if from another console we modify the test file?
@@ -262,7 +262,7 @@ This is the full collection of load related methods:
 
 .. method:: File.load_state()
 
-      (Re)loads the handler's state from its associated file resource.  The
+      (Re)loads the handler's state from its associated file resource. The
       timestamp is updated.
 
 .. method:: File.load_state_from_string(string)
@@ -365,7 +365,7 @@ function::
     <itools.handlers.file.File object at 0x2b65c5f01910>
 
 Here the :meth:`get_handler` method did not found a specific handler class
-for the PDF document, so it chose the basic :class:`File` class.  But we can
+for the PDF document, so it chose the basic :class:`File` class. But we can
 do it better::
 
     >>> import itools.pdf
@@ -488,7 +488,7 @@ Itools provides a default read only database::
 Caching
 -------
 
-The database supports caching. Every time we call :meth:`get_handler` , we get
+The database supports caching. Every time we call :meth:`get_handler`, we get
 always the same file handler, because it is stored in the cache::
 
     >>> db.get_handler('itools.pdf')
@@ -569,7 +569,7 @@ This is the programming interface provided by the database:
 
   .. method:: del_handler(key)
 
-        Removes the handler at the given key reference.  If it is a folder
+        Removes the handler at the given key reference. If it is a folder
         removes all its content recursively.
 
   .. method:: copy_handler(source, target)
@@ -581,7 +581,7 @@ This is the programming interface provided by the database:
   .. method:: move_handler(source, target)
 
         Moves the handler from the given *source* key reference to the given
-        *target* key reference.  If it is a folder the all its content is
+        *target* key reference. If it is a folder the all its content is
         moved.
 
 All modification methods do the changes in-memory. Changes can be later
@@ -701,7 +701,7 @@ is running, the transaction will be half saved, and our filesystem database
 will be left in an inconsistent state.
 
 To address this issue, for applications that require the transactions to be
-atomic whatever happens, the :mod:`itools.handlers` package includes the
+atomic whatever happens, the :mod:`itools.database` package includes the
 :class:`GitDatabase` class. See func:`make_git_database` to start with.
 
 An even safer approach is to not allow any modification at all. RODatabase
