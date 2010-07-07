@@ -19,13 +19,15 @@
 # Boston, MA  02110-1301, USA
 
 # Import from itools
-from itools.web import Server, RootResource, BaseView
 from itools.handlers import RWDatabase
+from itools.loop import Loop
+from itools.web import WebServer, RootResource, BaseView
 
 
 class MyView(BaseView):
     access = True
     def GET(self, resource, context):
+        context.set_content_type('text/plain')
         return 'Hello World'
 
 class MyRoot(RootResource):
@@ -34,6 +36,8 @@ class MyRoot(RootResource):
 
 if __name__ == '__main__':
     root = MyRoot()
-    server = Server(root)
-    server.database = RWDatabase(5000)
-    server.start()
+    server = WebServer(root)
+    server.listen('localhost', 8080)
+    server.database = RWDatabase()
+    loop = Loop()
+    loop.run()

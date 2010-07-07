@@ -22,8 +22,9 @@ Example: Hello World
 Let's see a basic usage of the framework::
 
     # Import from itools
+    from itools.handlers import RWDatabase
+    from itools.loop import Loop
     from itools.web import WebServer, RootResource, BaseView
-    from itools.handlers import RODatabase
 
 
     class MyView(BaseView):
@@ -39,8 +40,10 @@ Let's see a basic usage of the framework::
     if __name__ == '__main__':
         root = MyRoot()
         server = WebServer(root)
-        server.database = RODatabase()
-        server.start()
+        server.listen('localhost', 8080)
+        server.database = RWDatabase()
+        loop = Loop()
+        loop.run()
 
 To test the code above, type:
 
@@ -173,17 +176,19 @@ To illustrate what has been explained so far, see this code::
     import datetime
 
     # Import from itools
-    from itools.handlers import RODatabase
+    from itools.handlers import RWDatabase
+    from itools.loop import Loop
     from itools.uri import get_reference
     from itools.web import WebServer, RootResource, Resource, BaseView
+
 
     class CalendarView(BaseView):
         access = True
         def GET(self, resource, context):
-            context.content_type = 'text/html'
             month = int(resource.name)
             year = int(resource.parent.name)
             cal = calendar.month(year, month)
+            context.set_content_type('text/html')
             return "<html><body><h2><pre>%s</pre></h2></body></html>" % cal
 
     class Month(Resource):
@@ -227,8 +232,10 @@ To illustrate what has been explained so far, see this code::
     if __name__ == '__main__':
         root = MyRoot()
         server = WebServer(root)
-        server.database = RODatabase()
-        server.start()
+        server.listen('localhost', 8080)
+        server.database = RWDatabase()
+        loop = Loop()
+        loop.run()
 
 To try this example type:
 
@@ -375,11 +382,6 @@ strongly recommended to use the higher level API provided by the context:
 
     Returns the keys of all the form values sent by the client.
 
-.. method:: Context.has_form_value(name)
-
-    Returns :obj:`True` if the client sent a value with the given name,
-    :obj:`False` if not.
-
 .. method:: Context.get_form_value(self, name, type=String, default=None)
 
     Returns the form value for the given *name*. If the client sent more than
@@ -423,11 +425,6 @@ level API to work with them:
 
     Returns the value of the cookie with the given name. If there is not a
     cookie with that name return :obj:`None`.
-
-.. method:: Context.has_cookie(name)
-
-    Returns :obj:`True` if there is a cookie with the given name, :obj:`False`
-    otherwise.
 
 .. method:: Context.set_cookie(name, value, \*\*kw)
 
@@ -495,11 +492,6 @@ Public API
 .. method:: Resource.get_resource(path)
 
      Returns the resource at the given path.
-
-.. method:: Resource.has_resource(path)
-
-     Returns :obj:`True` if there is a resource at the given path,
-     :obj:`False` otherwise.
 
 .. method:: Resource.get_names(path='.')
 

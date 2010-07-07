@@ -24,8 +24,10 @@ import datetime
 
 # Import from itools
 from itools.handlers import RWDatabase
+from itools.loop import Loop
 from itools.uri import get_reference
-from itools.web import Server, RootResource, Resource, BaseView
+from itools.web import WebServer, RootResource, Resource, BaseView
+
 
 class CalendarView(BaseView):
     access = True
@@ -33,6 +35,7 @@ class CalendarView(BaseView):
         month = int(resource.name)
         year = int(resource.parent.name)
         cal = calendar.month(year, month)
+        context.set_content_type('text/html')
         return "<html><body><h2><pre>%s</pre></h2></body></html>" % cal
 
 class Month(Resource):
@@ -75,10 +78,9 @@ class MyRoot(RootResource):
 
 if __name__ == '__main__':
     root = MyRoot()
-    server = Server(root)
-    server.database = RWDatabase(5000)
-    server.start()
-
-
-
+    server = WebServer(root)
+    server.listen('localhost', 8080)
+    server.database = RWDatabase()
+    loop = Loop()
+    loop.run()
 
