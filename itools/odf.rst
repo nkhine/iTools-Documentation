@@ -17,7 +17,7 @@ STL and Open Document Format
 ============================
 
 You can use the STL and the ODF handler to produce documents. It's useful to
-do mailings. The :func:`stl_to_odt` function allow to use  substitution
+do mailings. The :func:`stl_to_odt` function allow to use substitution
 placeholders (ex: ``${firstname}``) in an ODF file to compute substitutions.
 
 Here a python example to generate a letter::
@@ -25,18 +25,21 @@ Here a python example to generate a letter::
     #!/usr/bin/env python
     # -*- coding: UTF-8 -*-
 
-    from itools.odf.odf import ODTFile, stl_to_odt
+    from itools.handlers import RWDatabase
+    from itools.odf.odf import stl_to_odt, ODTFile
     from itools.stl import stl
 
     namespace = {'firstname': 'Jean',
                  'lastname': 'Dupond'}
     # Load the model
-    handler = ODTFile('model_letter.odt')
+    rw_database = RWDatabase()
+    handler = rw_database('model_letter.odt')
     # Fill the odt file handler with the namespace dictionnary content.
     document = stl_to_odt(handler, namespace)
     # Save the letter
     handler = ODTFile(string=document)
-    handler.save_state_to('letter_jean_dupond.odt')
+    rw_database.set_handler('model_letter2.odt', handler)
+    rw_database.save_change()
 
 
 
