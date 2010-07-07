@@ -319,7 +319,7 @@ The Namespace
 
     def view(self):
         # Load the STL template
-        handler = get_handler('TaskTracker_view.xml')
+        handler = ro_database.get_handler('TaskTracker_view.xml')
 
         # Build the namespace
         namespace = {}

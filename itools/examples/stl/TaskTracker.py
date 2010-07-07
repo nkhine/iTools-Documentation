@@ -20,8 +20,7 @@ from textwrap import wrap, fill
 
 # Import from itools
 from itools.core import add_type
-from itools.handlers import register_handler_class, get_handler
-from itools.handlers import TextFile
+from itools.handlers import register_handler_class, ro_database, TextFile
 from itools.stl import stl
 
 
@@ -124,7 +123,7 @@ class TaskTracker(TextFile):
     #########################################################################
     def view(self):
         # Load the STL template
-        handler = get_handler('TaskTracker_view.xml')
+        handler = ro_database.get_handler('TaskTracker_view.xml')
 
         # Build the namespace
         namespace = {}
@@ -145,5 +144,5 @@ register_handler_class(TaskTracker)
 
 
 if __name__ == '__main__':
-    task_tracker = TaskTracker('itools.tt')
+    task_tracker = ro_database.get_handler('itools.tt')
     print task_tracker.view()
