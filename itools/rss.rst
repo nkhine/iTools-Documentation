@@ -34,10 +34,10 @@ by the RSS Advisory Board.
 Let's open this sample::
 
     >>> import itools.http
+    >>> from itools.handlers import ro_database
     >>> from itools.rss import RSSFile
     >>>
-    >>> sample = RSSFile()
-    >>> sample.load_state_from('http://www.rssboard.org/files/sample-rss-2.xml')
+    >>> sample = ro_database.get_handler('http://www.rssboard.org/files/sample-rss-2.xml', RSSFile)
 
 Notice we haven't used the ability of :mod:`vfs` to directly open and load the
 feed, because the web server doesn't send the ``application/rss+xml``
