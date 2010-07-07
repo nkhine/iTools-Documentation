@@ -10,7 +10,7 @@
 .. contents::
 
 The :mod:`itools.log` package provides a simple programming interface for
-logging events (errors, warning messages, etc.).  It is inspired by the
+logging events (errors, warning messages, etc.). It is inspired by the
 logging facilities included in the `GLib
 <http://library.gnome.org/devel/glib/>`_ library.
 
@@ -43,7 +43,7 @@ Every log event belongs to one of these five levels:
 Logging functions
 =================
 
-For every level there is a function.  Below we define the default behavior
+For every level there is a function. Below we define the default behavior
 of these functions, we will see later how to override this behavior.
 
 .. function:: log_fatal(message, domain=None)
@@ -68,7 +68,7 @@ of these functions, we will see later how to override this behavior.
    By default this function does nothing, debug messages are ignored.
 
 The ``domain`` argument allows to classify the log events by application
-domains.  This argument is optional, if not given then the event belongs to
+domains. This argument is optional, if not given then the event belongs to
 the default domain.
 
 .. note::
@@ -94,7 +94,7 @@ syslog messages of Unix systems; except for the date, which is in a different
 format.
 
 More important is the fact that the itools logging system allows log events to
-span multiple lines.  For instance, by default, if we are handling an
+span multiple lines. For instance, by default, if we are handling an
 exception while logging, the traceback will be printed:
 
 .. code-block:: python
@@ -141,11 +141,11 @@ Here there is the description of the default logger class:
 .. class:: Logger(log_file=None, min_level=INFO)
 
    By default messages are printed to the standard error or the standard
-   output, depending on the level of the message.  If the ``log_file``
+   output, depending on the level of the message. If the ``log_file``
    argument is given, it must be a file path, then messages will be written
    to the indicated file instead of printed.
 
-   By default debug messages are ignored.  The argument ``min_level`` allows
+   By default debug messages are ignored. The argument ``min_level`` allows
    to change this, for instance, to log all messages, pass the :data:`DEBUG`
    value.
 
