@@ -151,8 +151,9 @@ The package :mod:`itools.xml` also includes a handler class for XML files.
 The state of the handler is just the very same events the parser returns::
 
     >>> from itools.xmlfile import XMLFile
+    >>> from itools.handlers import ro_database
     >>>
-    >>> document = XMLFile('hello.xml')
+    >>> document = ro_database.get_handler('hello.xml', XMLFile)
     >>> for type, value, line in document.events:
     ...     print 'Line:', line
     ...     print 'Type:', type
