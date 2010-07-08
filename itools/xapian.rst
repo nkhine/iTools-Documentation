@@ -3,8 +3,13 @@
 
 .. module:: itools.xapian
    :synopsis: A catalog based on Xapian
+   :deprecated:
 
 .. index:: Xapian
+
+.. deprecated:: 0.62
+   The :mod:`xapian` module is deprecated and will not be developed further;
+   development will continue with the :mod:`database` module.
 
 .. contents::
 
