@@ -12,7 +12,7 @@ ALLSPHINXOPTS   = -d .build/doctrees $(PAPEROPT) $(SPHINXOPTS) .
 
 # Epydoc
 ITOOLS_PATH= ${shell python -c "import itools; print itools.__path__[0]"}
-EPYDOC=epydoc --no-frames --docformat restructuredtext --no-private --introspect-only --no-sourcecode --name itools --url http://www.hforge.org/itools/
+EPYDOC=epydoc --no-frames --no-private --introspect-only --no-sourcecode --name itools --url http://www.hforge.org/itools/
 
 .PHONY: clean help html pdf pickle htmlhelp latex changes linkcheck web
 
