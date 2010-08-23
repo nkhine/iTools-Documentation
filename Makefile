@@ -34,6 +34,7 @@ clean:
 	cd ikaaro && make clean
 	cd git && make clean
 	cd i18n && make clean
+	cd itools-api && make clean
 
 png-figures:
 	cd itools && make png
