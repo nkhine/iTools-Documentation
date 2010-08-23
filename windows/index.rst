@@ -15,6 +15,7 @@ How to build itools from Linux to Windows
 
 #. | Install MinGW
    | http://sf.net/project/showfiles.php?group_id=2435
+
    ::
 
    $ wine MinGW-5.1.4.exe
@@ -40,6 +41,7 @@ How to build itools from Linux to Windows
 
 #. | Install GLib and pkg-config
    | http://ftp.acc.umu.se/pub/gnome/binaries/win32/
+
    ::
 
    $ cd ~/.wine/drive_c/MinGW/
@@ -49,6 +51,7 @@ How to build itools from Linux to Windows
 
 #. | Install Python (in Wine)
    | http://www.python.org/download/
+
    ::
 
    $ msiexec /i python-2.6.2.msi
@@ -62,6 +65,7 @@ How to build itools from Linux to Windows
 
 #. | Install pywin32
    | https://sourceforge.net/projects/pywin32/
+
    ::
 
    $ wine pywin32-214.win32-py2.6.exe
