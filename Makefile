@@ -4,7 +4,7 @@ DATE = $(shell date '+%F')
 
 # You can set these variables from the command line.
 SPHINXOPTS    =
-SPHINXBUILD   = sphinx-build
+SPHINXBUILD   = python sphinx-link.py
 
 # Internal variables.
 PAPEROPT     = -D latex_paper_size=a4
