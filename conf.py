@@ -179,6 +179,8 @@ jdavid = ur'Juan David Ibáñez Palomar'
 latex_documents = [
   ('itools/index', 'itools-tutorial.tex', ur"Itools' tutorial", jdavid,
    'manual'),
+  ('itools-api/index', 'itools-reference.tex', ur"Itools' API", jdavid,
+   'manual'),
   ('ikaaro/users', 'user-guide.tex', ur"User Guide", jdavid, 'howto'),
   ('ikaaro/admins', 'administrator-guide.tex', ur"Administrators Guide",
    jdavid, 'howto'),
